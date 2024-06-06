@@ -4,6 +4,7 @@ let idProducto = 0;
 class Sistema {
   constructor() {
     this.listaUsuarios = [];
+    this.listaProductos = [];
   }
 
   validarUserNameRepetido(userName) {
@@ -20,5 +21,9 @@ class Sistema {
 
   agregarUsuario(usuarioComprador) {
     this.listaUsuarios.push(usuarioComprador);
+  }
+
+  agregarProducto(nuevoProducto) {
+    this.listaProductos.push(nuevoProducto);
   }
 }

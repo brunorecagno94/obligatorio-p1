@@ -78,6 +78,14 @@ class Producto {
     this.imagen = urlImagen;
     this.stock = stockProd.trim();
     this.id = ++idProducto;
+    this.oferta = false;
+    this.estadoActivo = true;
+  }
+
+  //Validación general del producto
+  validarProducto() {
+    return this.validarNombreProd && this.validarPrecioProd() &&
+    this.validarStockProd() && this.validarDescProd() && this.validarImagenProd();
   }
 
   validarNombreProd() {
