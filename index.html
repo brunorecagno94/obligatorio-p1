@@ -74,7 +74,7 @@
         </div>
         <div>
           <label for="">CVC</label>
-          <input type="pass" id="cvc-registro">
+          <input type="pass" id="cvc-registro" maxlength="3">
         </div>
         <button id="registrar-usuario">Registrarse</button>
       </section>
@@ -95,8 +95,15 @@
           <textarea id="input-descripcion-producto" rows="6" cols="40"></textarea>
         </div>
         <div>
-          <label for="input-imagen-producto">Imagen (ingresar URL)</label>
-          <input type="text" id="input-imagen-producto">
+          <label for="input-imagen-producto">Seleccionar imagen</label>
+          <select type="text" id="input-imagen-producto">
+            <option value="">Seleccionar</option>
+            <option value="img-pelota">Pelota</option>
+            <option value="img-camiseta">Camiseta</option>
+            <option value="img-zapatillas">Zapatillas</option>
+            <option value="img-conos">Conos</option>
+            <option value="img-proteccion">Protección</option>
+          </select>
         </div>
         <div>
           <label for="input-stock-producto">Stock</label>
@@ -105,34 +112,7 @@
         <button id="btn-crear-producto">Crear producto</button>
       </section>
 
-      <section>
-        <!-- TITULOS -->
-        <h1>Titulo 1</h1>
-        <h2>Titulo 2</h2>
-        <h3>Titulo 3</h3>
-        <h4>Titulo 4</h4>
-        <hr>
-        <!-- INPUTS -->
-        <h3>Inputs</h3>
-        <label for="txtTexto">txtTexto</label>
-        <input type="text" id="txtTexto" />
-        <label for="nbrNumero">nbrNumero</label>
-        <input type="number" id="nbrNumero" />
-        <label for="txtPass">txtPass</label>
-        <input type="password" id="txtPass" />
-        <label for="txtComentarios">Text Area</label>
-        <textarea id="txtComentarios"></textarea>
-        <label for="slcOpciones">Select</label>
-        <select id="slcOpciones">
-          <option value="1">opcion 1</option>
-          <option value="2">opcion 2</option>
-          <option value="3">opcion 3</option>
-        </select>
-        <input type="button" value="Enviar" /><br />
-        <hr />
-
-      </section>
-
+    
       <!-- TABLA -->
       <h3>Resumen</h3>
       <table>

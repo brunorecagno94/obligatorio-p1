@@ -13,23 +13,22 @@ class Persona {
     this.saldo = 3000;
   }
 
+  //VALIDACIONES REGISTRO
   //Validación en el momento del registro
   validarRegistroUsuario() {
     return this.nombre !== "" && this.apellido !== "" && this.validarUserName() &&
       this.validarPass() /* && this.validarTarjeta(); */
-      //ARREGLAR VALIDAR TARJETA!!!!
+    //ARREGLAR VALIDAR TARJETA!!!!
   }
   //Validación general de username
   validarUserName() {
     return this.userName !== "";
   }
 
-
   //Validación general de contraseña
   validarPass() {
     return this.pass.length >= 5 && encontrarMayuscula(this.pass) && encontrarMinuscula(this.pass) && encontrarNumero(this.pass);
   }
-
 
   //Validación general de tarjeta
   validarTarjeta() {
@@ -85,12 +84,13 @@ class Producto {
   //Validación general del producto
   validarProducto() {
     return this.validarNombreProd && this.validarPrecioProd() &&
-    this.validarStockProd() && this.validarDescProd() && this.validarImagenProd();
+      this.validarStockProd() && this.validarDescProd() && this.validarImagenProd();
   }
 
   validarNombreProd() {
     return this.nombre !== "";
   }
+
   validarPrecioProd() {
     return this.precio !== "" && !isNaN(this.precio) && this.precio > 0;
   }

@@ -1,6 +1,7 @@
 const sistema = new Sistema();
 const btnRegistro = document.querySelector('#registrar-usuario');
 const btnCrearProducto = document.querySelector('#btn-crear-producto');
+const btnLogin = document.querySelector("#ingresar-login");
 
 //Función que se ejecuta al clickear el botón de "Registrarse"
 function registrarUsuario() {
@@ -13,9 +14,8 @@ function registrarUsuario() {
   const usuarioComprador = new Persona(nombre, apellido, userName, pass, numTarjeta, cvcTarjeta);
 
   //Si los datos son válidos, se agrega el usuario al array de usuarios
-  if (!sistema.validarUserNameRepetido(userName) && usuarioComprador.validarRegistroUsuario()) {
+  if (!buscarAtributo(sistema.listaUsuarios, 'userName', userName) && usuarioComprador.validarRegistroUsuario()) {
     sistema.agregarUsuario(usuarioComprador);
-    console.log(sistema.listaUsuarios)
   } else {
     alert('No se registró el usuario');
   }
@@ -23,20 +23,26 @@ function registrarUsuario() {
 
 btnRegistro.addEventListener('click', () => {
   registrarUsuario(sistema.listaUsuarios);
+  console.log(sistema.listaUsuarios)
 })
 
 //Función que se ejecuta al clickear el botón de "Ingresar"
 function loginUsuario() {
-  const btnLogin = document.querySelector("#ingresar-login");
+  const inputUserName = document.querySelector("#username-login").value.trim();
+  const inputPass = document.querySelector("#pass-login").value.trim();
+  /* let objetoUsuario = buscarObjeto(sistema.listaUsuarios, 'userName', inputUserName); */
 
-  btnRegistro.addEventListener('click', e => {
-
-    const userName = document.querySelector("#username-login")
-    const pass = document.querySelector("#pass-login")
-
-  })
-
+  if (buscarAtributo(sistema.listaUsuarios, 'pass', inputPass)
+    && validarCaseInsensitive(sistema.listaUsuarios, 'userName', inputUserName)) {
+    alert('Login EXITOSO')
+  } else {
+    alert('Login FALLADO')
+  }
 }
+
+btnLogin.addEventListener('click', () => {
+  loginUsuario(sistema.listaUsuarios)
+});
 
 //Functión que se ejecuta al clickear el botón "Crear producto"
 function crearProducto() {
@@ -50,7 +56,6 @@ function crearProducto() {
   //Si los datos son válidos, se crea el producto
   if (producto.validarProducto()) {
     sistema.agregarProducto(producto);
-    console.log(sistema.listaProductos)
   } else {
     alert('No se agregó el producto');
   }

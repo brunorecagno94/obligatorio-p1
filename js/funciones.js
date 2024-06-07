@@ -59,3 +59,27 @@ function eliminarCaracter(texto, caracter) {
   }
   return nuevoTexto;
 }
+
+function buscarAtributo(array, atributo, valor) {
+  let existe = false;
+
+  for (let i = 0; i < array.length; i++) {
+    const objeto = array[i];  
+    if (objeto[`${atributo}`] === valor) {
+      existe = true;
+    }
+  }
+  return existe;
+}
+
+function validarCaseInsensitive(array, atributo, valor) {
+  let valida = false;
+  
+  for (let i = 0; i < array.length; i++) {
+    const objeto = array[i];
+    if (objeto[`${atributo}`].toLowerCase() === valor.toLowerCase()) {
+      valida = true;
+    }
+  }
+  return valida;
+}
