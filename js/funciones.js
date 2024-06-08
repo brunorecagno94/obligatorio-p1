@@ -41,8 +41,9 @@ function encontrarMayuscula(texto) {
 
 function encontrarMinuscula(texto) {
   let exito = false;
+
   for (let i = 0; i < texto.length; i++) {
-    if (texto[i] === texto[i].toLowerCase()) {
+    if (texto[i] >= 'a' && texto[i] <= 'z') {
       exito = true;
     }
   }
@@ -64,7 +65,7 @@ function buscarAtributo(array, atributo, valor) {
   let existe = false;
 
   for (let i = 0; i < array.length; i++) {
-    const objeto = array[i];  
+    const objeto = array[i];
     if (objeto[`${atributo}`] === valor) {
       existe = true;
     }
@@ -74,7 +75,7 @@ function buscarAtributo(array, atributo, valor) {
 
 function validarCaseInsensitive(array, atributo, valor) {
   let valida = false;
-  
+
   for (let i = 0; i < array.length; i++) {
     const objeto = array[i];
     if (objeto[`${atributo}`].toLowerCase() === valor.toLowerCase()) {

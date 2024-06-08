@@ -14,7 +14,7 @@ function registrarUsuario() {
   const usuarioComprador = new Persona(nombre, apellido, userName, pass, numTarjeta, cvcTarjeta);
 
   //Si los datos son válidos, se agrega el usuario al array de usuarios
-  if (!buscarAtributo(sistema.listaUsuarios, 'userName', userName) && usuarioComprador.validarRegistroUsuario()) {
+  if (!buscarAtributo(sistema.listaUsuarios, 'userName', userName) && !validarCaseInsensitive(sistema.listaUsuarios, 'userName', userName) && usuarioComprador.validarRegistroUsuario()) {
     sistema.agregarUsuario(usuarioComprador);
   } else {
     alert('No se registró el usuario');
@@ -23,7 +23,6 @@ function registrarUsuario() {
 
 btnRegistro.addEventListener('click', () => {
   registrarUsuario(sistema.listaUsuarios);
-  console.log(sistema.listaUsuarios)
 })
 
 //Función que se ejecuta al clickear el botón de "Ingresar"
@@ -48,11 +47,13 @@ btnLogin.addEventListener('click', () => {
 function crearProducto() {
   const nombreProd = document.querySelector('#input-nombre-producto').value;
   const precioProd = document.querySelector('#input-precio-producto').value;
+  const imagenSeleccionada = document.querySelector('#input-imagen-producto').value;
+  const urlImagen = asignarImagen(imagenSeleccionada); 
   const descripcionProd = document.querySelector('#input-descripcion-producto').value;
-  const urlImagen = document.querySelector('#input-imagen-producto').value;
   const stockProd = document.querySelector('#input-stock-producto').value;
-  const producto = new Producto(nombreProd, precioProd, descripcionProd, urlImagen, stockProd);
 
+  const producto = new Producto(nombreProd, precioProd, descripcionProd, urlImagen, stockProd);
+  
   //Si los datos son válidos, se crea el producto
   if (producto.validarProducto()) {
     sistema.agregarProducto(producto);
@@ -60,7 +61,29 @@ function crearProducto() {
     alert('No se agregó el producto');
   }
 }
-
+function asignarImagen(imagenSeleccionada) {
+  switch (imagenSeleccionada) {
+    case 'img-pelota':
+      urlImagen = './img/pelota.jpg';
+      break;
+    case 'img-camiseta':
+      urlImagen = './img/camiseta.png';
+      break;
+    case 'img-zapatillas':
+      urlImagen = './img/zapatilla.jpeg';
+      break;
+    case 'img-conos':
+      urlImagen = './img/conos.jpg';
+      break;
+    case 'img-proteccion':
+      urlImagen = './img/proteccion.jpg';
+      break;
+  }
+}
 btnCrearProducto.addEventListener('click', () => {
   crearProducto(sistema.listaProductos);
 })
+
+
+
+

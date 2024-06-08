@@ -195,3 +195,9 @@ footer a {
   font-weight: 600;
   text-decoration: none;
 }
+
+.info-pass {
+  display: block;
+  font-size: 12px;
+}
+

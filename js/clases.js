@@ -16,8 +16,8 @@ class Persona {
   //VALIDACIONES REGISTRO
   //Validación en el momento del registro
   validarRegistroUsuario() {
-    return this.nombre !== "" && this.apellido !== "" && this.validarUserName() &&
-      this.validarPass() /* && this.validarTarjeta(); */
+    return this.nombre !== "" && this.apellido !== "" && isNaN(this.nombre) && isNaN(this.apellido) && this.validarUserName() &&
+      this.validarPass() && this.validarTarjeta();
     //ARREGLAR VALIDAR TARJETA!!!!
   }
   //Validación general de username
@@ -32,17 +32,36 @@ class Persona {
 
   //Validación general de tarjeta
   validarTarjeta() {
-    return this.validarNumeroTrajeta() && this.validacionLuhn() && /* bien */this.validarCVC();
+    return this.validarFormato() /*&& this.validacionLuhn()*/ && this.validarCVC();
   }
 
-  //Valida que la tarjeta tenga 16 dígitos
-  validarNumeroTrajeta() {
-    return this.numTarjetaFinal === 16;
+  /* VALIDARFORMATO Y VALIDAR4DIGITOS vienen juntas*/
+  validarFormato() {
+    const numeros = this.numTarjeta.split("-")
+    if (this.numTarjeta.length === 19 &&
+      numeros.length === 4 &&
+      this.validar4Digitos(numeros[0]) &&
+      this.validar4Digitos(numeros[1]) &&
+      this.validar4Digitos(numeros[2]) &&
+      this.validar4Digitos(numeros[3])
+    ) {
+      return true
+    }
+    return false
   }
+
+  validar4Digitos(texto) {
+    if (texto.length === 4 && !isNaN(texto)) {
+      return true;
+    }
+    return false;
+  }
+
 
   validarCVC() {
     return !isNaN(this.cvcTarjeta) && this.cvcTarjeta.length === 3;
   }
+
 
   validacionLuhn() {
     let alternar = true;
@@ -63,9 +82,14 @@ class Persona {
 
     total = total * 9;
     total = String(total);
-    return this.numTarjetaFinal[this.numTarjetaFinal.length - 1] === total[total.length - 1];
-  }
+    if (this.numTarjetaFinal[this.numTarjetaFinal.length - 1] === total[total.length - 1]) {
+      alert('valida luhn')
+    } else {
+      alert('no luhn')
+    }
+  };
 }
+
 
 
 //Constructor para nuevo producto
@@ -105,11 +129,6 @@ class Producto {
   validarImagenProd() {
     return this.imagen !== "";
   }
-
-
-
-
-
 
 }
 
