@@ -118,6 +118,21 @@ function asignarImagen(imagenSeleccionada) {
     case 'img-proteccion':
       urlImagen = './img/proteccion.jpg';
       break;
+    case 'img-pesa':
+      urlImagen = './img/pesa.jpg';
+      break;
+    case 'img-gorra':
+      urlImagen = './img/gorra.jpg';
+      break;
+    case 'img-lentes':
+      urlImagen = './img/lentes.jpg';
+      break;
+    case 'img-patas':
+      urlImagen = './img/patas.jpg';
+      break;
+    case 'img-botella':
+      urlImagen = './img/botella.jpg';
+      break;
     default:
       urlImagen = "";
   }
@@ -136,9 +151,10 @@ function comprarProducto() {
   const precioProd = document.querySelector('#input-precio-producto').value;
   const cantidad = parseInt(document.querySelector('#cantidad-producto-compra').value.trim());
 
-  const compra = new Compra(nombreProd, cantidad, precioProd);
+  if (!isNaN(cantidad) && cantidad > 0) {
+    const compra = new Compra(nombreProd, cantidad, precioProd);
 
-  let compraTabla = `
+    let compraTabla = `
     <tr>
       <td>${compra.nombre}</td>
       <td>${cantidad}</td>
@@ -148,10 +164,33 @@ function comprarProducto() {
       </td>
     </tr>
     `
-  listadoCompras.innerHTML += compraTabla;
+    listadoCompras.innerHTML += compraTabla;
+  } else {
+    alert('Debe comprar al menos una unidad')
+  }
 }
 
+function divPrueba() {
+  const select = document.querySelector('#select-prueba').value;
+  const div = document.querySelector('#div-prueba');
+  let result = ``
 
+  switch (select) {
+    case 'valueA':
+      result = `<h5>VALUE A</h5>`;
+      break;
+    case 'valueB':
+      result = `<h5>VALUE B</h5>`;
+      break;
+    case 'valueC':
+      result = `<h5>VALUE C</h5>`;
+      break;
+  }
+
+  div.innerHTML = result;
+}
+
+document.querySelector('#btn-prueba').addEventListener('click', divPrueba);
 
 //LISTADO DE COMPRAS DE USUARIO
 function mostrarCompras(arrayCompras) {
