@@ -16,10 +16,18 @@ function registrarUsuario() {
   const apellido = document.querySelector('#apellido-registro').value;
   const userName = document.querySelector('#usuario-registro').value;
   const pass = document.querySelector('#pass-registro').value;
-  const numTarjeta = document.querySelector('#tarjeta-registro').value;
+  const numTarjeta = document.querySelector('#tarjeta-registro');
   const cvcTarjeta = document.querySelector('#cvc-registro').value;
-  const usuarioComprador = new Persona(nombre, apellido, userName, pass, numTarjeta, cvcTarjeta);
 
+  //Agrega un guión cada 4 dígitos al input de la tarjeta de crédito
+  numTarjeta.addEventListener('keydown', e => {
+    if (numTarjeta.length === 4 || numTarjeta.length === 9 || numTarjeta.length === 14) {
+      numTarjeta.innerHTML += '-';
+    }
+  })
+
+  const usuarioComprador = new Persona(nombre, apellido, userName, pass, numTarjeta.value, cvcTarjeta);
+  console.log(usuarioComprador)
   //Si los datos son válidos, se agrega el usuario al array de usuarios
   if (!buscarAtributo(sistema.listaUsuarios, 'userName', userName) && !validarCaseInsensitive(sistema.listaUsuarios, 'userName', userName) && usuarioComprador.validarRegistroUsuario()) {
     sistema.agregarUsuario(usuarioComprador);
@@ -52,6 +60,7 @@ btnLogin.addEventListener('click', () => {
   loginUsuario(sistema.listaUsuarios)
 });
 
+/*--------------------------------------------------------- */
 
 //CREACIÓN DE PRODUCTO
 //Functión que se ejecuta al clickear el botón "Crear producto"
@@ -143,7 +152,6 @@ function asignarImagen(imagenSeleccionada) {
 btnCrearProducto.addEventListener('click', () => {
   crearProducto(sistema.listaProductos);
 })
-
 
 //COMPRA DE PRODUCTOS
 function comprarProducto() {

@@ -5,7 +5,7 @@ class Persona {
     this.apellido = apellido.trim();
     this.userName = userName.trim();
     this.pass = pass.trim();
-    this.numTarjeta = numTarjeta.trim();
+    this.numTarjeta = numTarjeta;
     this.numTarjetaFinal = eliminarCaracter(this.numTarjeta, "-");
     this.cvcTarjeta = cvcTarjeta;
     this.admin = false;
