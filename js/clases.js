@@ -90,8 +90,6 @@ class Persona {
   };
 }
 
-
-
 //Constructor para nuevo producto
 class Producto {
   constructor(nombreProd, precioProd, descripcionProd, urlImagen, stockProd) {
@@ -130,6 +128,17 @@ class Producto {
     return this.imagen !== "";
   }
 
+}
+
+//Constructor para cada compra del usuario Comprador
+class Compra {
+  constructor(nombreProd, cantidad, precioProd) {
+    this.nombre = nombreProd.trim();
+    this.cantidadComprada = cantidad;
+    this.precio = precioProd.trim();
+    this.estadoCompra = '';
+    this.usuarioComprador = '';
+  }
 }
 
 

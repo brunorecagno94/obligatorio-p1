@@ -1,21 +1,12 @@
 const sistema = new Sistema();
 const btnRegistro = document.querySelector('#registrar-usuario');
-const btnCrearProducto = document.querySelector('#btn-crear-producto');
 const btnLogin = document.querySelector("#ingresar-login");
+const btnCrearProducto = document.querySelector('#btn-crear-producto');
 const seccionRegistro = document.querySelector('#contenedor-registro');
 const listadoProductos = document.querySelector('#contenedor-productos');
+const listadoCompras = document.querySelector('#contenedor-compras-usuario');
+const parrafoMontoTotal = document.querySelector('#total-compras-usuario');
 
-/* document.querySelector('#boton').addEventListener('click', e => {
-  e.preventDefault();
-  if(!sistema.usuarioLogueado) {
-    
-  sistema.usuarioLogueado = true;
-    seccionRegistro.style.display = 'none';
-  } else {
-    seccionRegistro.style.display = 'block';
-  }
-
-}) */
 
 
 //REGISTRO DE USUARIO
@@ -83,9 +74,9 @@ function crearProducto() {
     <td>${descripcionProd}</td>
     <td>${producto.oferta ? 'Sí' : 'No'}</td>
     <td><img src=${urlImagen} alt=${descripcionProd}></td>
-    <td><input type="number" value="cantidad-producto-compra"></td>
+    <td><input type="number" id="cantidad-producto-compra"></td>
     <td>
-      <input type="button" value="Comprar"/>
+      <input type="button" data-value="${idProducto}" class="btn-comprar-producto" value="Comprar"/>
     </td>
   </tr>`;
 
@@ -100,6 +91,12 @@ function crearProducto() {
     }
   } else {
     alert('No se agregó el producto');
+  }
+
+  const btnComprarProducto = document.querySelectorAll('.btn-comprar-producto');
+
+  for (let i = 0; i < btnComprarProducto.length; i++) {
+    btnComprarProducto[i].addEventListener("click", comprarProducto);
   }
 }
 
@@ -133,5 +130,43 @@ btnCrearProducto.addEventListener('click', () => {
 })
 
 
+//COMPRA DE PRODUCTOS
+function comprarProducto() {
+  const nombreProd = document.querySelector('#input-nombre-producto').value;
+  const precioProd = document.querySelector('#input-precio-producto').value;
+  const cantidad = parseInt(document.querySelector('#cantidad-producto-compra').value.trim());
+
+  const compra = new Compra(nombreProd, cantidad, precioProd);
+
+  let compraTabla = `
+    <tr>
+      <td>${compra.nombre}</td>
+      <td>${cantidad}</td>
+      <td>${precioProd}</td>
+      <td>
+        <input type="button" data-value=${idProducto} class="btn-cancelar-compra" value="Cancelar"/>
+      </td>
+    </tr>
+    `
+  listadoCompras.innerHTML += compraTabla;
+}
 
 
+
+//LISTADO DE COMPRAS DE USUARIO
+function mostrarCompras(arrayCompras) {
+  let compraTabla = ``
+
+  for (let i = 0; i < arrayCompras.length; i++) {
+    const compra = arrayCompras[i];
+
+    compraTabla = `
+    <tr>
+      <td>${compra.nombre}</td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    `
+  }
+}
