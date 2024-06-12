@@ -99,10 +99,10 @@ class Producto {
     this.precio = precioProd.trim();
     this.descripcion = descripcionProd.trim();
     this.imagen = urlImagen;
-    this.stock = stockProd.trim();
+    this.stock = stockProd;
     this.id = ++idProducto;
     this.oferta = false;
-    this.estadoActivo = true;
+    this.estado = 'activo';
   }
 
   //Validación general del producto

@@ -5,6 +5,7 @@ class Sistema {
   constructor() {
     this.listaUsuarios = [];
     this.listaProductos = [];
+    this.usuarioLogueado = false;
   }
 
   agregarUsuario(usuarioComprador) {

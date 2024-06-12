@@ -32,7 +32,6 @@
     </header>
     <!-- FIN CABEZAL -->
     <main>
-
       <!-- LOGIN -->
       <section id="contenedor-login">
         <h3>Iniciar Sesión</h3>
@@ -65,7 +64,8 @@
         </div>
         <div>
           <label for="">Contraseña</label>
-          <span class="info-pass">Debe tener un mínimo de 5 caracteres, una mayúscula, una minúscula, y un número.</span>
+          <span class="info-pass">Debe tener un mínimo de 5 caracteres, una mayúscula, una minúscula, y un
+            número.</span>
           <input type="password" id="pass-registro" placeholder="">
         </div>
         <div>
@@ -112,49 +112,25 @@
         <button id="btn-crear-producto">Crear producto</button>
       </section>
 
-    
       <!-- TABLA -->
-      <h3>Resumen</h3>
+      <h3>Productos</h3>
       <table>
         <thead>
           <tr>
             <th>Nombre</th>
             <th>Precio</th>
+            <th>Descripción</th>
+            <th>Oferta</th>
             <th>Imagen</th>
+            <th>Cantidad</th>
             <th></th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <td>
-              Nombre 1
-            </td>
-            <td>30</td>
-            <td><img src="https://place-hold.it/100x100/aaa/imagen.jpg" alt="prueba"></td>
-            <td>
-              <input type="button" value="Acción" />
-            </td>
-          </tr>
-          <tr>
-            <td>
-              9
-            </td>
-            <td>30</td>
-            <td><img src="https://place-hold.it/100x100/aaa/imagen.jpg" alt="prueba"></td>
-            <td>
-              <input type="button" value="Accion" />
-            </td>
-          </tr>
+        <tbody id="contenedor-productos">
+
 
         </tbody>
       </table>
-
-      <p>
-        Donec dapibus arcu a diam commodo, vel vehicula orci volutpat.
-        Vestibulum convallis tempor mattis. Donec molestie semper leo vel
-        luctus. Curabitur quis nisi maximus, luctus lorem quis, dignissim
-        augue.
-      </p>
       <hr />
     </main>
     <!-- FIN CONTENIDO -->

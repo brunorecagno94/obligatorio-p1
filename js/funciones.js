@@ -73,6 +73,16 @@ function buscarAtributo(array, atributo, valor) {
   return existe;
 }
 
+function sumarStock(array, atributo, valor, nuevoStock) {
+
+  for (let i = 0; i < array.length; i++) {
+    const objeto = array[i];
+    if (objeto[`${atributo}`] === valor) {
+      objeto.stock += nuevoStock;
+    }
+  }
+}
+
 function validarCaseInsensitive(array, atributo, valor) {
   let valida = false;
 
