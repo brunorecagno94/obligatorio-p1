@@ -32,7 +32,7 @@ function encontrarMayuscula(texto) {
   let exito = false;
 
   for (let i = 0; i < texto.length; i++) {
-    if (texto[i] === texto[i].toUpperCase()) {
+    if (texto[i] >= 'A' && texto[i] <= 'Z') {
       exito = true;
     }
   }
@@ -73,6 +73,17 @@ function buscarAtributo(array, atributo, valor) {
   return existe;
 }
 
+/* function devolverObjeto(valor) {
+  let objeto = null;
+  let i = 0;
+
+  while (objeto === null && i < this.objetos.length) {
+    if (this.objetos[i].valor === valor) objeto = this.objetos[i];
+    else indice++;
+  }
+  return objeto;
+} */
+
 function sumarStock(array, atributo, valor, nuevoStock) {
 
   for (let i = 0; i < array.length; i++) {
@@ -93,4 +104,17 @@ function validarCaseInsensitive(array, atributo, valor) {
     }
   }
   return valida;
+}
+
+
+function validarSaldoSuficiente(array, atributo) {
+  let valida = false;
+  let saldoUsuario = buscarAtributo(sistema.listaUsuarios, 'saldo', saldo)
+  for (let i = 0; i < array.length; i++) {
+    const objeto = array[i];
+    if (objeto[`${atributo}`] * cantidad <= saldoUsuario) {
+      valida = true;
+    }
+    return valida;
+  }
 }

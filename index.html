@@ -82,14 +82,17 @@
       <!-- VISTA USUARIO -->
 
       <!-- VISTA ADMINISTRADOR -->
-       <select name="" id="select-prueba">
+       <hr>
+        <h5>Prototipo filtrado de listas</h5>
+      <select name="" id="select-prueba">
         <option value="valueA">A</option>
         <option value="valueB">B</option>
         <option value="valueC">C</option>
-       </select>
-       <button id="btn-prueba">MOSTRAR</button>
-       <div id="div-prueba"></div>
-
+      </select>
+      <button id="btn-prueba">MOSTRAR</button>
+      <div id="div-prueba">
+      </div>
+      <hr>
 
       <!-- CREAR PRODUCTO -->
       <section id="contenedor-crear-producto">
@@ -130,44 +133,57 @@
       </section>
 
       <!-- LISTADO DE PRODUCTOS DISPONIBLES-->
-      <h3>Productos</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Nombre</th>
-            <th>Precio</th>
-            <th>Descripción</th>
-            <th>Oferta</th>
-            <th>Imagen</th>
-            <th>Cantidad</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody id="contenedor-productos">
+      <section id="contenedor-listado-productos">
+        <h3>Productos</h3>
+        <div id="inputs-radio">
+          <legend>Mostrar productos:</legend>
+          <div class="input-group">
+            <label for="todos">Ver todos</label>
+            <input type="radio" name="mostrar-productos" id="todos" value="todos">
+            <label for="ofertas">Ver sólo ofertas</label>
+            <input type="radio" name="mostrar-productos" id="ofertas" value="ofertas">
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Precio</th>
+              <th>Descripción</th>
+              <th>Oferta</th>
+              <th>Imagen</th>
+              <th>Cantidad</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="contenedor-productos">
 
 
-        </tbody>
-      </table>
-
+          </tbody>
+        </table>
+      </section>
       <!-- LISTADO CON FILTRO -->
       <!-- LISTADO DE COMPRAS DEL USUARIO-->
-      <h3>Compras</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Nombre</th>
-            <th>Unidades compradas</th>
-            <th>Monto total</th>
-            <th>Estado</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody id="contenedor-compras-usuario">
+      <section id="contenedor-compras">
+        <h3>Compras</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Precio</th>
+              <th>Unidades compradas</th>
+              <th>Estado</th>
+              <th>Monto total</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="contenedor-compras-usuario">
 
-        </tbody>
-        <p id="total-compras-usuario"></p>
-      </table>
-      <hr/>
+          </tbody>
+          <p id="total-compras-usuario"></p>
+        </table>
+      </section>
+      <hr />
 
     </main>
     <!-- FIN CONTENIDO -->

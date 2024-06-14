@@ -136,10 +136,20 @@ class Compra {
     this.nombre = nombreProd.trim();
     this.cantidadComprada = cantidad;
     this.precio = precioProd.trim();
-    this.estadoCompra = '';
+    this.estadoCompra = 'pendiente';
     this.usuarioComprador = '';
   }
+
+  validarCantidadVacia() {
+    return !isNaN(this.cantidadComprada) && this.cantidadComprada > 0;
+  }
+
+  validarEstadoCompra() {
+    return this.estadoCompra = "pendiente";
+  }
+
 }
+
 
 
 

@@ -201,3 +201,23 @@ footer a {
   font-size: 12px;
 }
 
+#contenedor-registro {
+  display: none;
+}
+
+#inputs-radio {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 1rem;
+
+  .input-group {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    input {
+      margin: 0;
+      min-width: auto;
+    }
+  }
+}

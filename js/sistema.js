@@ -1,8 +1,8 @@
-/* Se inicializa en 10 porque ya hay usuarios registrados
+/* Se inicializa en 9 porque ya hay usuarios registrados
 del 0 al 9 */
-let idUsuario = 10;
-// Se inicializa en 5 porque ya hay compras hechas del 0 al 5
-let idProducto = 5;
+let idUsuario = 9;
+// Se inicializa en 5 porque ya hay compras hechas del 0 al 4
+let idProducto = 4;
 
 class Sistema {
   constructor() {
@@ -94,7 +94,7 @@ class Sistema {
         numTarjetaFinal: '6582234773081235',
         cvcTarjeta: '363',
         admin: false,
-        id: 5,
+        id: 8,
         saldo: 3000
       },
       {
@@ -106,11 +106,106 @@ class Sistema {
         numTarjetaFinal: '2346234883422505',
         cvcTarjeta: '350',
         admin: false,
-        id: 5,
+        id: 9,
         saldo: 3000
       },
     ];
-    this.listaProductos = [];
+    this.listaProductos = [
+
+      {
+        nombre: 'Pelota',
+        precio: 6000,
+        descripcion: "Tremenda pelota",
+        imagen: './img/pelota.jpg',
+        stock: 12,
+        id: 0,
+        oferta: true,
+        estado: 'activo',
+      },
+      {
+        nombre: 'Pesas',
+        precio: 12000,
+        descripcion: "Tremenda pesa che",
+        imagen: './img/pesa.jpg',
+        stock: 3,
+        id: 1,
+        oferta: false,
+        estado: 'activo',
+      },
+      {
+        nombre: 'Botella',
+        precio: 1200,
+        descripcion: "Te juro que es tremenda botella",
+        imagen: './img/botella.jpg',
+        stock: 1,
+        id: 2,
+        oferta: false,
+        estado: 'activo',
+      },
+      {
+        nombre: 'Gorra de natación',
+        precio: 150,
+        descripcion: "en teoria te ayuda",
+        imagen: './img/gorra.jpg',
+        stock: 50,
+        id: 3,
+        oferta: false,
+        estado: 'activo',
+      },
+      {
+        nombre: 'Conos',
+        precio: 700,
+        descripcion: "No se bro es un cono",
+        imagen: './img/conos.jpg',
+        stock: 34,
+        id: 4,
+        oferta: true,
+        estado: 'activo',
+      },
+    ];
+    this.listaCompras = [
+      {
+        nombre: 'Pelota',
+        cantidadComprada: 2,
+        precio: 6000,
+        estadoCompra: 'pendiente',
+        usuarioComprador: 'AliP',
+        id: 0
+      },
+      {
+        nombre: 'Pesas',
+        cantidadComprada: 5,
+        precio: 12000,
+        estadoCompra: 'pendiente',
+        usuarioComprador: 'Frangi',
+        id: 1
+      },
+      {
+        nombre: 'Botella',
+        cantidadComprada: 1,
+        precio: 1200,
+        estadoCompra: 'pendiente',
+        usuarioComprador: 'Frangi',
+        id: 2
+      },
+      {
+        nombre: 'Gorra de natación',
+        cantidadComprada: 1,
+        precio: 150,
+        estadoCompra: 'pendiente',
+        usuarioComprador: 'Matimati',
+        id: 3
+      },
+      {
+        nombre: 'Conos',
+        cantidadComprada: 2,
+        precio: 700,
+        estadoCompra: 'pendiente',
+        usuarioComprador: 'Matimati',
+        id: 4
+      }
+    ];
+    this.listaOfertas = [];
     this.usuarioLogueado = false;
   }
 
@@ -121,6 +216,62 @@ class Sistema {
   agregarProducto(nuevoProducto) {
     this.listaProductos.push(nuevoProducto);
   }
+
+  //Crea la tabla de productos precargados
+  crearTabla() {
+    let productoTabla = ``;
+    let contenidoTabla = ``;
+
+    for (let i = 0; i < this.listaProductos.length; i++) {
+      const producto = this.listaProductos[i];
+      productoTabla = `
+      <tr>
+        <td>
+          ${producto.nombre}
+        </td>
+        <td>$${producto.precio}</td>
+        <td>${producto.descripcion}</td>
+        <td>${producto.oferta ? 'Sí' : 'No'}</td>
+        <td><img src=${producto.imagen} alt=${producto.descripcion}></td>
+        <td><input type="number" id="cantidad-producto-compra"></td>
+        <td>
+          <input type="button" data-value="${producto.id}" class="btn-comprar-producto" value="Comprar"/>
+        </td>
+      </tr>`;
+
+      contenidoTabla += productoTabla;
+    }
+
+    listadoProductos.innerHTML = contenidoTabla;
+  }
+
+  //Crea la tabla de compras del usuario Comprador
+  crearTablaCompras() {
+    let productoTabla = ``;
+    let contenidoTabla = ``;
+
+    for (let i = 0; i < this.listaCompras.length; i++) {
+      const producto = this.listaCompras[i];
+      productoTabla = `
+      <tr>
+        <td>
+          ${producto.nombre}
+        </td>
+        <td>$${producto.precio}</td>
+        <td>${producto.cantidadComprada}</td>
+        <td>${producto.estadoCompra}</td>
+        <td>$${producto.precio * producto.cantidadComprada}</td>
+        <td>
+          <input type="button" data-value="${producto.id}" class="btn-comprar-producto" value="Comprar"/>
+        </td>
+      </tr>`;
+
+      contenidoTabla += productoTabla;
+    }
+
+    listadoCompras.innerHTML = contenidoTabla;
+  }
+
 
 
   /* document.querySelector('#boton').addEventListener('click', e => {
