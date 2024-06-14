@@ -219,6 +219,34 @@ class Sistema {
 
   //Crea la tabla de productos precargados
   crearTabla() {
+    let estructuraTabla = `
+    <h3>Productos</h3>
+        <div id="inputs-radio">
+          <legend>Mostrar productos:</legend>
+          <div class="input-group">
+            <label for="todos">Ver todos</label>
+            <input type="radio" name="mostrar-productos" id="todos" value="todos">
+            <label for="ofertas">Ver sólo ofertas</label>
+            <input type="radio" name="mostrar-productos" id="ofertas" value="ofertas">
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Precio</th>
+              <th>Descripción</th>
+              <th>Oferta</th>
+              <th>Imagen</th>
+              <th>Cantidad</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="contenedor-productos">
+
+
+          </tbody>
+        </table>`;
     let productoTabla = ``;
     let contenidoTabla = ``;
 
@@ -242,11 +270,32 @@ class Sistema {
       contenidoTabla += productoTabla;
     }
 
+    seccionProductos.innerHTML = estructuraTabla;
+    const listadoProductos = document.querySelector('#contenedor-productos');
     listadoProductos.innerHTML = contenidoTabla;
   }
 
   //Crea la tabla de compras del usuario Comprador
   crearTablaCompras() {
+    //Se crea la estructura de la tabla
+    let estructuraTabla = `
+    <h3>Compras</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Precio</th>
+              <th>Unidades compradas</th>
+              <th>Estado</th>
+              <th>Monto total</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="contenedor-compras-usuario">
+
+          </tbody>
+          <p id="total-compras-usuario"></p>
+        </table>`;
     let productoTabla = ``;
     let contenidoTabla = ``;
 
@@ -268,11 +317,17 @@ class Sistema {
 
       contenidoTabla += productoTabla;
     }
-
+    /* Se inserta la estructura de la tabla en el contenedor de HTML, y luego se inserta el listado
+    de productos en la estructura de la tabla */
+    seccionCompras.innerHTML = estructuraTabla;
+    const listadoCompras = document.querySelector('#contenedor-compras-usuario');
     listadoCompras.innerHTML = contenidoTabla;
   }
 
+  //Crea la tabla para administrar productos del usuario Administrador
+  crearTablaAdmin() {
 
+  }
 
   /* document.querySelector('#boton').addEventListener('click', e => {
     e.preventDefault();

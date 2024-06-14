@@ -10,9 +10,9 @@ const seccionRegistro = document.querySelector('#contenedor-registro');
 const seccionLogin = document.querySelector('#contenedor-login');
 const seccionCrearProducto = document.querySelector('#contenedor-crear-producto');
 const seccionListadoProductos = document.querySelector('#contenedor-listado-productos');
-//Listados
-const listadoProductos = document.querySelector('#contenedor-productos');
-const listadoCompras = document.querySelector('#contenedor-compras-usuario');
+const seccionCompras = document.querySelector('#contenedor-compras');
+const seccionProductos = document.querySelector('#contenedor-listado-productos');
+
 const parrafoMontoTotal = document.querySelector('#total-compras-usuario');
 //CARGA DE LISTADOS PRECARGADOS
 sistema.crearTabla()
@@ -105,13 +105,8 @@ function crearProducto() {
 
   //Si los datos son válidos, se crea el producto
   if (producto.validarProducto()) {
-    if (buscarAtributo(sistema.listaProductos, 'imagen', urlImagen)) {
-      sumarStock(sistema.listaProductos, 'imagen', urlImagen, stockProd);
-      console.log(sistema.listaProductos)
-    } else {
-      sistema.agregarProducto(producto);
-      listadoProductos.innerHTML += productoTabla;
-    }
+    sistema.agregarProducto(producto);
+    listadoProductos.innerHTML += productoTabla;
   } else {
     alert('No se agregó el producto');
   }
@@ -234,7 +229,7 @@ function comprarProducto() {
   if (!isNaN(cantidad) && cantidad > 0) {
     const compra = new Compra(nombreProd, cantidad, precioProd);
 
-    
+
     //TERMINAR
     /* for (let i = 0; i < sistema.listaProductos.length; i++) {
       const producto = sistema.listaProductos[i];
