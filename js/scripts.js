@@ -4,7 +4,6 @@ const btnRegistroLogin = document.querySelector('#registrarse');
 const btnRegistro = document.querySelector('#registrar-usuario');
 const btnLogin = document.querySelector("#ingresar-login");
 const btnCrearProducto = document.querySelector('#btn-crear-producto');
-const filtrosProductos = document.querySelectorAll('input[name="mostrar-productos"]');
 //Secciones
 const seccionRegistro = document.querySelector('#contenedor-registro');
 const seccionLogin = document.querySelector('#contenedor-login');
@@ -17,6 +16,15 @@ const parrafoMontoTotal = document.querySelector('#total-compras-usuario');
 //CARGA DE LISTADOS PRECARGADOS
 sistema.crearTabla()
 sistema.crearTablaCompras();
+const filtrosProductos = document.querySelectorAll('input[name="mostrar-productos"]');
+
+//Funcionamiento de los botones de Comprar
+const btnsComprar = document.querySelectorAll('.btn-comprar-producto');
+for (let i = 0; i < btnsComprar.length; i++) {
+  const boton = btnsComprar[i];
+  const objetoProducto = devolverObjeto(sistema.listaProductos, boton['data-value'])
+  boton.addEventListener('click', comprarProducto);
+}
 
 /*--------------------------------------------------------------*/
 
@@ -97,7 +105,7 @@ function crearProducto() {
     <td>${descripcionProd}</td>
     <td>${producto.oferta ? 'Sí' : 'No'}</td>
     <td><img src=${urlImagen} alt=${descripcionProd}></td>
-    <td><input type="number" id="cantidad-producto-compra"></td>
+    <td><input type="number" class="cantidad-producto-compra"></td>
     <td>
       <input type="button" data-value="${idProducto}" class="btn-comprar-producto" value="Comprar"/>
     </td>
@@ -106,6 +114,7 @@ function crearProducto() {
   //Si los datos son válidos, se crea el producto
   if (producto.validarProducto()) {
     sistema.agregarProducto(producto);
+    const listadoProductos = document.querySelector('#contenedor-productos');
     listadoProductos.innerHTML += productoTabla;
   } else {
     alert('No se agregó el producto');
@@ -165,6 +174,7 @@ btnCrearProducto.addEventListener('click', () => {
 //Filtra el listado de productos mostrando todos o sólo las ofertas
 function filtrarProductos() {
   const inputFiltro = document.querySelector('input[name="mostrar-productos"]:checked');
+  const listadoProductos = document.querySelector('#contenedor-productos');
   let productoTabla = ``;
   let contenidoTabla = ``;
 
@@ -181,7 +191,7 @@ function filtrarProductos() {
         <td>${producto.descripcion}</td>
         <td>${producto.oferta ? 'Sí' : 'No'}</td>
         <td><img src=${producto.imagen} alt=${producto.descripcion}></td>
-        <td><input type="number" id="cantidad-producto-compra"></td>
+        <td><input type="number" class="cantidad-producto-compra"></td>
         <td>
           <input type="button" data-value="${producto.id}" class="btn-comprar-producto" value="Comprar"/>
         </td>
@@ -201,7 +211,7 @@ function filtrarProductos() {
         <td>${producto.descripcion}</td>
         <td>${producto.oferta ? 'Sí' : 'No'}</td>
         <td><img src=${producto.imagen} alt=${producto.descripcion}></td>
-        <td><input type="number" id="cantidad-producto-compra"></td>
+        <td><input type="number" class="cantidad-producto-compra"></td>
         <td>
           <input type="button" data-value="${producto.id}" class="btn-comprar-producto" value="Comprar"/>
         </td>
@@ -221,44 +231,69 @@ for (let i = 0; i < filtrosProductos.length; i++) {
 
 
 //COMPRA DE PRODUCTOS
-function comprarProducto() {
-  const nombreProd = document.querySelector('#input-nombre-producto').value;
-  const precioProd = document.querySelector('#input-precio-producto').value;
-  const cantidad = parseInt(document.querySelector('#cantidad-producto-compra').value.trim());
+function comprarProducto(objetoProducto) {
+  const cantidad = document.querySelectorAll('.cantidad-producto-compra');
+  
+if(objetoProducto['id'] === this['data-value']) {alert('EE')} else {alert('ooo')}
 
-  if (!isNaN(cantidad) && cantidad > 0) {
-    const compra = new Compra(nombreProd, cantidad, precioProd);
+  let compra = ``;
+
+  for (let i = 0; i < sistema.listaCompras.length; i++) {
+    const producto = sistema.listaProductos[i];
+
+    compra = `
+    <tr>
+      <td>
+        ${producto.nombre}
+      </td>
+      <td>$${producto.precio}</td>
+      <td>${cantidad}</td>
+      <td>pendiente</td>
+      <td>$${producto.precioProd * cantidad}</td>
+      <td>
+        <input type="button" data-value="" class="btn-comprar-producto" value="Comprar"/>
+      </td>
+    </tr>`;
 
 
-    //TERMINAR
-    /* for (let i = 0; i < sistema.listaProductos.length; i++) {
-      const producto = sistema.listaProductos[i];
-      if (producto['id'] === valor) {
-        if (producto.estado === 'activo') {
-          if (cantidad === producto.stock) {
-
+  }
+  /* 
+    if (!isNaN(cantidad) && cantidad > 0) {
+      const compra = new Compra(nombreProd, cantidad, precioProd);
+  
+  
+  
+      for (let i = 0; i < sistema.listaProductos.length; i++) {
+        const producto = sistema.listaProductos[i];
+        if (producto['id'] === valor) {
+          if (producto.estado === 'activo') {
+            if (cantidad === producto.stock) {
+  
+            }
+          } else {
+            alert('No se pudo realizar la compra')
           }
-        } else {
-          alert('No se pudo realizar la compra')
         }
       }
-    }
+  
+      let compraTabla = `
+      <tr>
+        <td>${compra.nombre}</td>
+        <td>${cantidad}</td>
+        <td>$${precioProd}</td>
+        <td>
+          <input type="button" data-value=${idProducto} class="btn-cancelar-compra" value="Cancelar"/>
+        </td>
+      </tr>
+      `
+      listadoCompras.innerHTML += compraTabla;
+    } else {
+      alert('Debe comprar al menos una unidad');
+    } */
 
-    let compraTabla = `
-    <tr>
-      <td>${compra.nombre}</td>
-      <td>${cantidad}</td>
-      <td>$${precioProd}</td>
-      <td>
-        <input type="button" data-value=${idProducto} class="btn-cancelar-compra" value="Cancelar"/>
-      </td>
-    </tr>
-    `
-    listadoCompras.innerHTML += compraTabla;
-  } else {
-    alert('Debe comprar al menos una unidad');
-  } */
-  }
+
+  const listadoCompras = document.querySelector('#contenedor-compras-usuario');
+  listadoCompras.innerHTML += compra;
 }
 
 //PRUEBA 
@@ -284,20 +319,3 @@ function divPrueba() {
 
 document.querySelector('#btn-prueba').addEventListener('click', divPrueba);
 
-//LISTADO DE COMPRAS DE USUARIO
-function mostrarCompras(arrayCompras) {
-  let compraTabla = ``
-
-  for (let i = 0; i < arrayCompras.length; i++) {
-    const compra = arrayCompras[i];
-
-    compraTabla = `
-    <tr>
-      <td>${compra.nombre}</td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    `
-  }
-}

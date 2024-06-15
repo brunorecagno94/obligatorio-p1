@@ -169,8 +169,7 @@ class Sistema {
         cantidadComprada: 2,
         precio: 6000,
         estadoCompra: 'pendiente',
-        usuarioComprador: 'AliP',
-        id: 0
+        usuarioComprador: 'AliP'
       },
       {
         nombre: 'Pesas',
@@ -178,7 +177,6 @@ class Sistema {
         precio: 12000,
         estadoCompra: 'pendiente',
         usuarioComprador: 'Frangi',
-        id: 1
       },
       {
         nombre: 'Botella',
@@ -186,7 +184,6 @@ class Sistema {
         precio: 1200,
         estadoCompra: 'pendiente',
         usuarioComprador: 'Frangi',
-        id: 2
       },
       {
         nombre: 'Gorra de natación',
@@ -194,7 +191,6 @@ class Sistema {
         precio: 150,
         estadoCompra: 'pendiente',
         usuarioComprador: 'Matimati',
-        id: 3
       },
       {
         nombre: 'Conos',
@@ -202,7 +198,6 @@ class Sistema {
         precio: 700,
         estadoCompra: 'pendiente',
         usuarioComprador: 'Matimati',
-        id: 4
       }
     ];
     this.listaOfertas = [];
@@ -219,6 +214,7 @@ class Sistema {
 
   //Crea la tabla de productos precargados
   crearTabla() {
+    //Se crea la estructura de la tabla
     let estructuraTabla = `
     <h3>Productos</h3>
         <div id="inputs-radio">
@@ -243,8 +239,6 @@ class Sistema {
             </tr>
           </thead>
           <tbody id="contenedor-productos">
-
-
           </tbody>
         </table>`;
     let productoTabla = ``;
@@ -254,14 +248,12 @@ class Sistema {
       const producto = this.listaProductos[i];
       productoTabla = `
       <tr>
-        <td>
-          ${producto.nombre}
-        </td>
-        <td>$${producto.precio}</td>
+        <td class="nombre-producto">${producto.nombre}</td>
+        <td class="precio-producto">$${producto.precio}</td>
         <td>${producto.descripcion}</td>
         <td>${producto.oferta ? 'Sí' : 'No'}</td>
         <td><img src=${producto.imagen} alt=${producto.descripcion}></td>
-        <td><input type="number" id="cantidad-producto-compra"></td>
+        <td><input type="number" class="cantidad-producto-compra"></td>
         <td>
           <input type="button" data-value="${producto.id}" class="btn-comprar-producto" value="Comprar"/>
         </td>
@@ -269,7 +261,8 @@ class Sistema {
 
       contenidoTabla += productoTabla;
     }
-
+    /* Se inserta la estructura de la tabla en el contenedor de HTML, y luego se inserta el listado
+       de productos en la estructura de la tabla */
     seccionProductos.innerHTML = estructuraTabla;
     const listadoProductos = document.querySelector('#contenedor-productos');
     listadoProductos.innerHTML = contenidoTabla;
@@ -303,9 +296,7 @@ class Sistema {
       const producto = this.listaCompras[i];
       productoTabla = `
       <tr>
-        <td>
-          ${producto.nombre}
-        </td>
+        <td>${producto.nombre}</td>
         <td>$${producto.precio}</td>
         <td>${producto.cantidadComprada}</td>
         <td>${producto.estadoCompra}</td>
@@ -322,6 +313,7 @@ class Sistema {
     seccionCompras.innerHTML = estructuraTabla;
     const listadoCompras = document.querySelector('#contenedor-compras-usuario');
     listadoCompras.innerHTML = contenidoTabla;
+    
   }
 
   //Crea la tabla para administrar productos del usuario Administrador

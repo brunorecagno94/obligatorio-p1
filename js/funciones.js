@@ -73,16 +73,16 @@ function buscarAtributo(array, atributo, valor) {
   return existe;
 }
 
-/* function devolverObjeto(valor) {
+function devolverObjeto(array, valor) {
   let objeto = null;
   let i = 0;
 
-  while (objeto === null && i < this.objetos.length) {
-    if (this.objetos[i].valor === valor) objeto = this.objetos[i];
+  while (objeto === null && i < array.length) {
+    if (array[i].valor === valor) objeto = array[i];
     else indice++;
   }
   return objeto;
-} */
+} 
 
 function sumarStock(array, atributo, valor, nuevoStock) {
 
