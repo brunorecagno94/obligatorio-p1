@@ -18,7 +18,6 @@ class Persona {
   validarRegistroUsuario() {
     return this.nombre !== "" && this.apellido !== "" && isNaN(this.nombre) && isNaN(this.apellido) && this.validarUserName() &&
       this.validarPass() && this.validarTarjeta();
-    //ARREGLAR VALIDAR TARJETA!!!!
   }
   //Validación general de username
   validarUserName() {
@@ -32,7 +31,7 @@ class Persona {
 
   //Validación general de tarjeta
   validarTarjeta() {
-    return this.validarFormato() /*&& this.validacionLuhn()*/ && this.validarCVC();
+    return this.validarFormato() && this.validacionLuhn() && this.validarCVC();
   }
 
   /* VALIDARFORMATO Y VALIDAR4DIGITOS vienen juntas*/
@@ -64,30 +63,30 @@ class Persona {
 
 
   validacionLuhn() {
-    let alternar = true;
+    let alternar = false;
     let total = 0;
 
     for (let i = this.numTarjetaFinal.length - 1; i >= 0; i--) {
+      let n = parseInt(this.numTarjetaFinal[i]);
+
       if (alternar) {
-        let subTotal = parseInt(this.numTarjetaFinal[i]) * 2;
-        if (subTotal > 9) subTotal -= 9;
-        total += subTotal;
-        alternar = false;
+        n *= 2;
+        if (n > 9) n -= 9;
       }
-      else {
-        total += parseInt(this.numTarjetaFinal[i]);
-        alternar = true;
-      }
+
+      total += n;
+      alternar = !alternar;
     }
 
-    total = total * 9;
-    total = String(total);
-    if (this.numTarjetaFinal[this.numTarjetaFinal.length - 1] === total[total.length - 1]) {
-      alert('valida luhn')
+    // El número es válido si el total es divisible por 10
+    if (total % 10 === 0) {
+      alert('valida luhn');
+      return true;
     } else {
-      alert('no luhn')
+      alert('no luhn');
+      return false;
     }
-  };
+  }
 }
 
 //Constructor para nuevo producto
@@ -132,14 +131,19 @@ class Producto {
 
 //Constructor para cada compra del usuario Comprador
 class Compra {
-  constructor(nombreProd, cantidad, precioProd) {
+  constructor(nombreProd, cantidad, precioProd, idProd) {
     this.nombre = nombreProd.trim();
     this.cantidadComprada = cantidad;
-    this.precio = precioProd.trim();
+    this.precio = precioProd;
     this.estadoCompra = 'pendiente';
-    this.usuarioComprador = '';
+    /* "id" existe para conectar el producto con la compra a la hora de cargarla en la tabla de compras, mientras que
+    "idCompra" existe para identificar cada compra a la hora de cancelar, y evitar que se cancelen tres compras distintas
+    de un mismo producto */
+    this.id = idProd;
+    this.idCompra = ++idCompra;
+    this.usuarioComprador = sistema.usuarioLogueado;
   }
-
+  
   validarCantidadVacia() {
     return !isNaN(this.cantidadComprada) && this.cantidadComprada > 0;
   }
@@ -149,9 +153,3 @@ class Compra {
   }
 
 }
-
-
-
-
-
-

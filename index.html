@@ -15,18 +15,7 @@
       <img id="logo" src="https://p1.develotion.com/cart.jpg" alt="logo" />
       <nav>
         <ul id="navPrincipal">
-          <li>
-            <a>Sección 1</a>
-          </li>
-          <li>
-            <a>Sección 2</a>
-          </li>
-          <li>
-            <a>Sección 3</a>
-          </li>
-          <li>
-            <a>Sección 4</a>
-          </li>
+          <!-- <li><a id="cerrar-sesion">Cerrar sesión</a></li> -->
         </ul>
       </nav>
     </header>
@@ -45,6 +34,8 @@
         </div>
         <button id="ingresar-login">Ingresar</button>
         <a href="#" id="registrarse">¿No tienes una cuenta?</a>
+        <!-- Error cuando falla login-->
+        <p id="login-alert"><strong>Usuario y contraseña incorrectos</strong></p>
       </section>
 
       <!-- REGISTRO DE USUARIOS -->
@@ -77,12 +68,14 @@
           <input type="pass" id="cvc-registro" maxlength="3">
         </div>
         <button id="registrar-usuario">Registrarse</button>
+        <!-- Error cuando falla registro -->
+        <p id="registro-alert"><strong>Comprueba que todos los campos sean correctos</strong></p>
       </section>
 
 
       <!-- VISTA ADMINISTRADOR -->
-       <hr>
-        <h5>Prototipo filtrado de listas</h5>
+      <hr>
+      <h5>Prototipo filtrado de listas</h5>
       <select name="" id="select-prueba">
         <option value="valueA">A</option>
         <option value="valueB">B</option>
@@ -94,7 +87,7 @@
       <hr>
 
       <!-- CREAR PRODUCTO -->
-      <section id="contenedor-crear-producto">
+      <section id="contenedor-crear-producto" class="vista-admin">
         <h3>Crear producto</h3>
         <div>
           <label for="input-nombre-producto">Nombre</label>
@@ -132,20 +125,16 @@
       </section>
 
       <!-- ADMINISTRAR PRODUCTOS -->
-       <section id="contenedor-administrar-productos">
+      <section id="contenedor-administrar-productos" class="vista-admin"></section>
 
-       </section>
 
       <!-- VISTA COMPRADOR -->
 
       <!-- LISTADO DE PRODUCTOS DISPONIBLES-->
-      <section id="contenedor-listado-productos">
-        
-      </section>
+      <section id="contenedor-listado-productos" class="vista-comprador"></section>
 
-      <!-- LISTADO DE COMPRAS DEL USUARIO-->
-      <section id="contenedor-compras">
-      </section>
+      <!-- LISTADO DE COMPRAS COMPRADOR/ADMINISTRADOR-->
+      <section id="contenedor-compras"></section>
       <hr />
 
     </main>

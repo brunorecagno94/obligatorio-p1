@@ -44,30 +44,39 @@ h4 {
 
 /* Estilos nav */
 #navPrincipal {
+  display: flex;
+  align-items: center;
   float: right;
   margin-top: 5px;
   margin-right: 10px;
   max-width: 700px;
+
+  li {
+    list-style-type: none;
+    padding: 10px;
+    margin: 5px;
+    float: left;
+  }
+
+  a {
+    cursor: pointer;
+    color: #fafafa;
+    font-size: 10px;
+    font-weight: 600;
+  }
+
+  p {
+    color: #fafafa;
+    font-size: 14px;
+    font-weight: 600;
+  }
 }
 
-#navPrincipal li {
-  list-style-type: none;
-  padding: 10px;
-  margin: 5px;
-  float: left;
-}
 
 header img {
   margin: 20px;
   width: 60px;
   border: 1px solid #888;
-}
-
-#navPrincipal a {
-  cursor: pointer;
-  color: #fafafa;
-  font-size: 14px;
-  font-weight: 600;
 }
 
 #navPrincipal a:hover {
@@ -219,5 +228,25 @@ footer a {
       margin: 0;
       min-width: auto;
     }
+  }
+}
+
+#login-alert, #registro-alert {
+  display: none;
+  color: red;
+}
+
+/* .vista-admin, .vista-comprador {
+  display: none;
+} */
+
+#registrarse {
+  margin-left: 1rem;
+  text-decoration: none;
+  color: rgb(47, 95, 167);
+  font-weight: 700;
+  
+  &:hover {
+    color: rgb(133, 158, 196);
   }
 }

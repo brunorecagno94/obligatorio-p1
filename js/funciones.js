@@ -73,13 +73,12 @@ function buscarAtributo(array, atributo, valor) {
   return existe;
 }
 
-function devolverObjeto(array, valor) {
-  let objeto = null;
-  let i = 0;
-
-  while (objeto === null && i < array.length) {
-    if (array[i].valor === valor) objeto = array[i];
-    else indice++;
+function devolverObjeto(array, atributo, valor) {
+  for (let i = 0; i < array.length; i++) {
+    if (array[i][`${atributo}`] === valor) {
+      objeto = array[i];
+      break;
+    }
   }
   return objeto;
 } 
@@ -105,7 +104,6 @@ function validarCaseInsensitive(array, atributo, valor) {
   }
   return valida;
 }
-
 
 function validarSaldoSuficiente(array, atributo) {
   let valida = false;
