@@ -14,6 +14,7 @@ const seccionLogin = document.querySelector('#contenedor-login');
 const seccionCrearProducto = document.querySelector('#contenedor-crear-producto');
 const seccionListadoProductos = document.querySelector('#contenedor-listado-productos');
 const seccionCompras = document.querySelector('#contenedor-compras');
+const seccionComprasAdmin = document.querySelector('#contenedor-compras-admin');
 const seccionProductos = document.querySelector('#contenedor-listado-productos');
 const seccionAdministrarProductos = document.querySelector('#contenedor-administrar-productos');
 

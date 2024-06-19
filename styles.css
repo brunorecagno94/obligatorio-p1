@@ -236,9 +236,9 @@ footer a {
   color: red;
 }
 
-/* .vista-admin, .vista-comprador {
+.vista-admin, .vista-comprador {
   display: none;
-} */
+}
 
 #registrarse {
   margin-left: 1rem;

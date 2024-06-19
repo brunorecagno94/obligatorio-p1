@@ -381,6 +381,7 @@ class Sistema {
         </table>`;
     let productoTabla = ``;
     let contenidoTabla = ``;
+    let usuarioLogueado = null;
 
     //Busca cuál usuario está logueado
     for (let i = 0; i < sistema.listaUsuarios.length; i++) {
@@ -393,21 +394,7 @@ class Sistema {
 
     //Guarda distintas listas dependiendo del usuario 
     if (usuarioLogueado.admin) {
-
-      switch (selectFiltro.value) {
-        case 'todas':
-          this.listaComprasAdmin = sistema.listaCompras;
-          break;
-        case 'aprobadas':
-          this.listaComprasAdmin = sistema.listaCompras.filter(compra => compra.estadoCompra === 'aprobada');
-          break;
-        case 'pendientes':
-          this.listaComprasAdmin = sistema.listaCompras.filter(compra => compra.estadoCompra === 'pendiente');
-          break;
-        case 'canceladas':
-          this.listaComprasAdmin = sistema.listaCompras.filter(compra => compra.estadoCompra === 'cancelada');
-          break;
-      }
+      this.listaComprasAdmin = sistema.listaCompras;
 
       for (let i = 0; i < this.listaComprasAdmin.length; i++) {
         const producto = this.listaComprasAdmin[i];
@@ -426,7 +413,7 @@ class Sistema {
 
         contenidoTabla += productoTabla;
       }
-      seccionCompras.innerHTML = estructuraTabla;
+      seccionComprasAdmin.innerHTML = estructuraTabla;
       const listaContenedor = document.querySelector('#contenedor-compras-interno');
       listaContenedor.innerHTML = contenidoTabla;
 
