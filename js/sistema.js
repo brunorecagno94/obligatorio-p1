@@ -120,6 +120,7 @@ class Sistema {
         descripcion: "Pelota oficial",
         imagen: './img/pelota.jpg',
         stock: 12,
+        idInicial: 'PROD_ID_0',
         id: 0,
         oferta: false,
         estado: 'activo',
@@ -130,6 +131,7 @@ class Sistema {
         descripcion: "Pesas para ejercicios",
         imagen: './img/pesa.jpg',
         stock: 3,
+        idInicial: 'PROD_ID_1',
         id: 1,
         oferta: false,
         estado: 'activo',
@@ -140,6 +142,7 @@ class Sistema {
         descripcion: "Cantimplora para guardar líquido",
         imagen: './img/botella.jpg',
         stock: 1,
+        idInicial: 'PROD_ID_2',
         id: 2,
         oferta: false,
         estado: 'activo',
@@ -150,6 +153,7 @@ class Sistema {
         descripcion: "Gorra para protección en piscina",
         imagen: './img/gorra.jpg',
         stock: 50,
+        idInicial: 'PROD_ID_3',
         id: 3,
         oferta: false,
         estado: 'activo',
@@ -160,6 +164,7 @@ class Sistema {
         descripcion: "Conos para ejercicios",
         imagen: './img/conos.jpg',
         stock: 34,
+        idInicial: 'PROD_ID_4',
         id: 4,
         oferta: false,
         estado: 'activo',
@@ -170,6 +175,7 @@ class Sistema {
         descripcion: "Patas de rana para nadar",
         imagen: './img/patas.jpg',
         stock: 14,
+        idInicial: 'PROD_ID_5',
         id: 5,
         oferta: false,
         estado: 'activo',
@@ -180,6 +186,7 @@ class Sistema {
         descripcion: "Protección para piernas",
         imagen: './img/proteccion.jpg',
         stock: 4,
+        idInicial: 'PROD_ID_6',
         id: 6,
         oferta: true,
         estado: 'activo',
@@ -190,6 +197,7 @@ class Sistema {
         descripcion: "Camiseta oficial",
         imagen: './img/camiseta.png',
         stock: 24,
+        idInicial: 'PROD_ID_7',
         id: 7,
         oferta: true,
         estado: 'activo',
@@ -200,6 +208,7 @@ class Sistema {
         descripcion: "Zapatillas oficiales",
         imagen: './img/zapatillas.jpeg',
         stock: 104,
+        idInicial: 'PROD_ID_8',
         id: 8,
         oferta: true,
         estado: 'activo',
@@ -210,6 +219,7 @@ class Sistema {
         descripcion: "Lentes para protección en piscina",
         imagen: './img/lentes.jpg',
         stock: 16,
+        idInicial: 'PROD_ID_9',
         id: 9,
         oferta: true,
         estado: 'activo',
@@ -222,6 +232,7 @@ class Sistema {
         precio: 6000,
         estadoCompra: 'pendiente',
         usuarioComprador: 'AliP',
+        idInicial: 'PROD_ID_',
         id: 0,
         idCompra: ++idCompra,
 
@@ -275,7 +286,7 @@ class Sistema {
     ];
     //Lista final que imprime el filtro de ofertas
     this.listaFiltroOfertas = [];
-    //Listas que imprime el filtro de compras
+    //Listados de compras para cada tipo de usuario
     this.listaComprasAdmin = [];
     this.listaComprasComprador = [];
     this.usuarioLogueado = null;
@@ -350,8 +361,7 @@ class Sistema {
 
   //Crea la tabla de compras
   crearTablaCompras() {
-    const selectFiltro = document.querySelector('#select-filtro-compras');
-
+    const selectFiltro = document.querySelector('#select-filtro-compras')
     //Se crea la estructura de la tabla
     let estructuraTabla = `
     <h3>Compras</h3>
@@ -361,14 +371,12 @@ class Sistema {
               <th>Nombre</th>
               <th>Precio</th>
               <th>Unidades compradas</th>
-              <th>Usuario</th>
               <th>Estado</th>
               <th>Monto total</th>
               <th></th>
             </tr>
           </thead>
-          <tbody id="contenedor-compras">
-
+          <tbody id="contenedor-compras-interno">
           </tbody>
         </table>`;
     let productoTabla = ``;
@@ -408,13 +416,16 @@ class Sistema {
           <td>${producto.estadoCompra}</td>
           <td>$${producto.precio * producto.cantidadComprada}</td>
           <td>
-            <input type="button" data-value="${producto.id}" class="btn-cancelar-compra" 
-            style="${producto.estadoCompra === 'aprobada' || producto.estadoCompra === 'cancelada' ? 'display:none' : ''}" value="Cancelar"/>
+            <input type="button" data-value="${producto.id}" class="btn-aprobar-compra" value="Aprobar"/>
           </td>
         </tr>`;
 
         contenidoTabla += productoTabla;
       }
+      seccionCompras.innerHTML = estructuraTabla;
+      const listaContenedor = document.querySelector('#contenedor-compras-interno');
+      listaContenedor.innerHTML = contenidoTabla;
+
     } else {
       switch (selectFiltro.value) {
         case 'aprobadas':
@@ -445,14 +456,12 @@ class Sistema {
 
         contenidoTabla += productoTabla;
       }
+      
     }
 
-    /* Se inserta la estructura de la tabla en el contenedor de HTML, y luego se inserta el listado
-    de productos en la estructura de la tabla */
-    seccionCompras.innerHTML = estructuraTabla;
-    const listadoComprasFin = document.querySelector('#contenedor-compras');
-    listadoComprasFin.innerHTML = contenidoTabla;
+
   }
+
 
   //Crea la tabla para administrar productos del usuario Administrador
   crearTablaAdmin() {

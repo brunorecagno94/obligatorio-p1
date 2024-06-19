@@ -16,16 +16,26 @@ const seccionListadoProductos = document.querySelector('#contenedor-listado-prod
 const seccionCompras = document.querySelector('#contenedor-compras');
 const seccionProductos = document.querySelector('#contenedor-listado-productos');
 const seccionAdministrarProductos = document.querySelector('#contenedor-administrar-productos');
-//CARGA DE LISTADOS PRECARGADOS
+
+//CARGA DE LISTADOS PRECARGADOS Y CREACIÓN DE EVENTOS DE BOTONES
 actualizarTablas();
+actualizarEventListeners()
 
 //Funcionamiento de los botones de Comprar
-let btnsComprarProducto = document.querySelectorAll('.btn-comprar-producto');
+/* let btnsComprarProducto = document.querySelectorAll('.btn-comprar-producto');
 for (let i = 0; i < btnsComprarProducto.length; i++) {
   const boton = btnsComprarProducto[i];
   boton.addEventListener('click', comprarProducto);
 }
 
+document.querySelectorAll('.btn-cancelar-compra').forEach(boton => {
+  boton.addEventListener('click', cancelarCompra);
+})
+
+document.querySelectorAll('.btn-aprobar-compra').forEach(boton => {
+  boton.addEventListener('click', aprobarCompra);
+})
+ */
 btnFiltrocompras.addEventListener('click', sistema.crearTablaCompras);
 /*--------------------------------------------------------------*/
 
@@ -75,9 +85,6 @@ function loginUsuario() {
   });
 }
 
-btnLogin.addEventListener('click', () => {
-  loginUsuario(sistema.listaUsuarios)
-});
 
 //Actualiza el nav superior cuando se loguea un usuario
 function actualizarNav() {
@@ -131,10 +138,7 @@ function mostrarVistaComprador() {
 }
 
 //REGISTRO DE USUARIO
-//Crea el formulario de registro al hacer click en "¿No tienes una cuenta?"
-btnRegistroLogin.addEventListener('click', e => {
-  seccionRegistro.style.display = 'block';
-});
+
 
 //Función que se ejecuta al clickear el botón de "Registrarse"
 function registrarUsuario() {
@@ -156,11 +160,9 @@ function registrarUsuario() {
   } else {
     errorRegistro.style.display = 'block';
   }
-}
 
-btnRegistro.addEventListener('click', () => {
-  registrarUsuario(sistema.listaUsuarios);
-})
+  actualizarEventListeners()
+}
 
 /*--------------------------------------------------------- */
 
@@ -176,6 +178,7 @@ function crearProducto() {
 
   const producto = new Producto(nombreProd, precioProd, descripcionProd, urlImagen, stockProd);
 
+  //Crea el producto para la tabla de productos
   let productoTabla = `
   <tr>
       <td>${nombreProd}</td>
@@ -189,6 +192,7 @@ function crearProducto() {
       </td>
   </tr>`;
 
+  //Crea el producto para la tabla de administrar productos
   let productoTablaAdmin = `<tr>
       <td>${producto.nombre}</td>
       <td><input type="number" data-id="${producto.id}" class="input-stock" value="${producto.stock}"></td>
@@ -210,15 +214,15 @@ function crearProducto() {
     alert('Producto agregado!');
     sistema.agregarProducto(producto);
 
-    // Actualizar la tabla de productos
+    //Actualiza la tabla de productos
     const listadoProductos = document.querySelector('#contenedor-productos');
     listadoProductos.innerHTML += productoTabla;
 
-    // Actualizar la tabla de administración de productos
+    // Actualiza la tabla de administrar productos
     const listadoProductosAdmin = document.querySelector('#lista-productos-admin');
     listadoProductosAdmin.innerHTML += productoTablaAdmin;
 
-    // Añadir event listener para el botón de compra del nuevo producto
+    // Añade eventos a los botones de compra
     const btnsComprarProducto = document.querySelectorAll('.btn-comprar-producto');
     for (let i = 0; i < btnsComprarProducto.length; i++) {
       btnsComprarProducto[i].addEventListener("click", comprarProducto);
@@ -274,10 +278,6 @@ function asignarImagen(imagenSeleccionada) {
 
   return urlImagen;
 }
-
-btnCrearProducto.addEventListener('click', () => {
-  crearProducto(sistema.listaProductos);
-})
 
 //Filtra el listado de productos mostrando todos o sólo las ofertas
 function filtrarProductos() {
@@ -369,6 +369,11 @@ function comprarProducto() {
   document.querySelectorAll('.btn-cancelar-compra').forEach(boton => {
     boton.addEventListener('click', cancelarCompra);
   })
+
+  document.querySelectorAll('.btn-aprobar-compra').forEach(boton => {
+    boton.addEventListener('click', aprobarCompra);
+  })
+
   document.querySelectorAll('.btn-comprar-producto').forEach(boton => {
     boton.addEventListener('click', comprarProducto);
   })
@@ -421,12 +426,33 @@ function cancelarCompra() {
     }
   }
 
+  sistema.crearTabla();
   sistema.crearTablaCompras();
 }
 
 document.querySelectorAll('.btn-cancelar-compra').forEach(boton => {
   boton.addEventListener('click', cancelarCompra);
 })
+
+//APRUEBA COMPRA DE PRODUCTO
+function aprobarCompra() {
+  const compraId = parseInt(this.getAttribute('data-value'));
+
+  for (let i = 0; i < sistema.listaCompras.length; i++) {
+    if (sistema.listaCompras[i].idCompra === compraId && sistema.listaCompras[i].estadoCompra === 'pendiente') {
+      sistema.listaCompras[i].estadoCompra = 'aprobada';
+      break;
+    }
+  }
+
+  sistema.crearTabla();
+  sistema.crearTablaCompras();
+}
+
+document.querySelectorAll('.btn-aprobar-compra').forEach(boton => {
+  boton.addEventListener('click', aprobarCompra);
+})
+
 
 //ADMINISTRAR PRODUCTOS
 function guardarCambiosProducto() {
@@ -460,7 +486,12 @@ function guardarCambiosProducto() {
   document.querySelectorAll('input[name="mostrar-productos"]').forEach(input => {
     input.addEventListener('click', filtrarProductos);
   });
+  //Crea el evento del botón para comprar producto
+  document.querySelectorAll('.btn-comprar-producto').forEach(boton => {
+    boton.addEventListener('click', comprarProducto);
+  })
 }
+
 
 
 //ACTUALIZAR TODAS LAS TABLAS
@@ -468,39 +499,54 @@ function actualizarTablas() {
   sistema.crearTabla()
   sistema.crearTablaCompras();
   sistema.crearTablaAdmin();
-  sistema.crearTablaCompras();
   filtrarProductos();
 }
 
+//ACTUALIZAR EVENTOS DE BOTONES
+function actualizarEventListeners() {
+  //Login
+  btnLogin.addEventListener('click', loginUsuario);
 
+  //Crea el formulario de registro al hacer click en "¿No tienes una cuenta?"
+  btnRegistroLogin.addEventListener('click', e => {
+    seccionRegistro.style.display = 'block';
+  });
 
+  //Registrar usuario
+  btnRegistro.addEventListener('click', () => {
+    registrarUsuario(sistema.listaUsuarios);
+  })
 
+  //Crear producto
+  btnCrearProducto.addEventListener('click', () => {
+    crearProducto(sistema.listaProductos);
+  })
 
-
-
-
-
-
-//PRUEBA 
-function divPrueba() {
-  const select = document.querySelector('#select-prueba').value;
-  const div = document.querySelector('#div-prueba');
-  let result = ``
-
-  switch (select) {
-    case 'valueA':
-      result = `<h5>VALUE A</h5>`;
-      break;
-    case 'valueB':
-      result = `<h5>VALUE B</h5>`;
-      break;
-    case 'valueC':
-      result = `<h5>VALUE C</h5>`;
-      break;
+  //Comprar producto
+  let btnsComprarProducto = document.querySelectorAll('.btn-comprar-producto');
+  for (let i = 0; i < btnsComprarProducto.length; i++) {
+    const boton = btnsComprarProducto[i];
+    boton.addEventListener('click', comprarProducto);
   }
 
-  div.innerHTML = result;
+  //Filtrar por ofertas
+  document.querySelectorAll('input[name="mostrar-productos"]').forEach(input => {
+    input.addEventListener('click', filtrarProductos);
+  });
+
+  //Guardar cambios al administrar producto
+  const botonesGuardar = document.querySelectorAll('.btn-guardar-producto');
+  for (let i = 0; i < botonesGuardar.length; i++) {
+    const boton = botonesGuardar[i];
+    boton.addEventListener('click', guardarCambiosProducto);
+  }
+
+  //Aprobar y cancelar compra (Administrador)
+  document.querySelectorAll('.btn-aprobar-compra').forEach(boton => {
+    boton.addEventListener('click', aprobarCompra);
+  })
+
+  document.querySelectorAll('.btn-cancelar-compra').forEach(boton => {
+    boton.addEventListener('click', cancelarCompra);
+  })
 }
-
-/* document.querySelector('#btn-prueba').addEventListener('click', divPrueba); */
-

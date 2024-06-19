@@ -102,7 +102,8 @@ class Producto {
     this.descripcion = descripcionProd.trim();
     this.imagen = urlImagen;
     this.stock = stockProd;
-    this.id = ++idProducto;
+    this.idInicial = `PROD_ID_${++idProducto}`
+    this.id = extraerNumero(this.idInicial);
     this.oferta = false;
     this.estado = 'activo';
   }

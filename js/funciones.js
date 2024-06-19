@@ -116,3 +116,13 @@ function validarSaldoSuficiente(array, atributo) {
     return valida;
   }
 }
+
+function extraerNumero(texto) {
+  let numero = '';
+  for (let i = 0; i < texto.length; i++) {
+    const caracter = texto[i];
+    if((!isNaN(parseInt(caracter)))) numero += caracter;
+  }
+
+  return parseInt(numero);
+}
