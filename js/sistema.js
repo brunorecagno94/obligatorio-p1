@@ -364,13 +364,13 @@ class Sistema {
     const selectFiltro = document.querySelector('#select-filtro-compras')
     //Se crea la estructura de la tabla
     let estructuraTabla = `
-    <h3>Compras</h3>
         <table>
           <thead>
             <tr>
               <th>Nombre</th>
               <th>Precio</th>
               <th>Unidades compradas</th>
+              <th>Usuario</th>
               <th>Estado</th>
               <th>Monto total</th>
               <th></th>
@@ -381,12 +381,13 @@ class Sistema {
         </table>`;
     let productoTabla = ``;
     let contenidoTabla = ``;
-    let usuarioLogueado = null;
 
     //Busca cuál usuario está logueado
     for (let i = 0; i < sistema.listaUsuarios.length; i++) {
       const usuario = sistema.listaUsuarios[i];
+      if(usuario.userName === this.usuarioLogueado);
       usuarioLogueado = usuario;
+      console.log(usuario.userName, this.usuarioLogueado)
       break;
     }
 
@@ -394,14 +395,17 @@ class Sistema {
     if (usuarioLogueado.admin) {
 
       switch (selectFiltro.value) {
+        case 'todas':
+          this.listaComprasAdmin = sistema.listaCompras;
+          break;
         case 'aprobadas':
-          this.listaComprasAdmin = this.listaCompras;
+          this.listaComprasAdmin = sistema.listaCompras.filter(compra => compra.estadoCompra === 'aprobada');
           break;
         case 'pendientes':
-          this.listaComprasAdmin = this.listaCompras.filter(compra => { compra.estadoCompra === 'pendiente' });
+          this.listaComprasAdmin = sistema.listaCompras.filter(compra => compra.estadoCompra === 'pendiente');
           break;
         case 'canceladas':
-          this.listaComprasAdmin = this.listaCompras.filter(compra => { compra.estadoCompra === 'cancelada' });
+          this.listaComprasAdmin = sistema.listaCompras.filter(compra => compra.estadoCompra === 'cancelada');
           break;
       }
 
@@ -427,15 +431,19 @@ class Sistema {
       listaContenedor.innerHTML = contenidoTabla;
 
     } else {
+
       switch (selectFiltro.value) {
+        case 'todas':
+          this.listaComprasComprador = sistema.listaCompras;
+          break;
         case 'aprobadas':
-          this.listaComprasComprador = this.listaCompras.filter(compra => { compra.estadoCompra === 'aprobada' });
+          this.listaComprasComprador = sistema.listaCompras.filter(compra => compra.estadoCompra === 'aprobada');
           break;
         case 'pendientes':
-          this.listaComprasComprador = this.listaCompras.filter(compra => { compra.estadoCompra === 'pendiente' });
+          this.listaComprasComprador = sistema.listaCompras.filter(compra => compra.estadoCompra === 'pendiente');
           break;
         case 'canceladas':
-          this.listaComprasComprador = this.listaCompras.filter(compra => { compra.estadoCompra === 'cancelada' });
+          this.listaComprasComprador = sistema.listaCompras.filter(compra => compra.estadoCompra === 'cancelada');
           break;
       }
 

@@ -52,7 +52,6 @@ function loginUsuario() {
     const usuario = sistema.listaUsuarios[i];
     if (usuario.pass === inputPass && usuario.userName.toLowerCase() === inputUserName.toLowerCase()) {
       usuarioLogueado = usuario;
-      console.log(usuario)
       break;
     }
   }
@@ -223,17 +222,14 @@ function crearProducto() {
     listadoProductosAdmin.innerHTML += productoTablaAdmin;
 
     // Añade eventos a los botones de compra
-    const btnsComprarProducto = document.querySelectorAll('.btn-comprar-producto');
-    for (let i = 0; i < btnsComprarProducto.length; i++) {
-      btnsComprarProducto[i].addEventListener("click", comprarProducto);
-    }
+    document.querySelectorAll('.btn-comprar-producto').forEach(boton => {
+      boton.addEventListener("click", comprarProducto);
+    });
 
     // Añadir event listener para el botón de guardar del nuevo producto
-    const botonesGuardar = document.querySelectorAll('.btn-guardar-producto');
-    for (let i = 0; i < botonesGuardar.length; i++) {
-      const boton = botonesGuardar[i];
+    document.querySelectorAll('.btn-guardar-producto').forEach(boton => {
       boton.addEventListener('click', guardarCambiosProducto);
-    }
+    });
   } else {
     alert('No se agregó el producto');
   }
@@ -317,10 +313,9 @@ function filtrarProductos() {
 
   listadoProductos.innerHTML = contenidoTabla;
 
-  let btnsComprarProducto = document.querySelectorAll('.btn-comprar-producto');
-  for (let boton of btnsComprarProducto) {
+  document.querySelectorAll('.btn-comprar-producto').forEach(boton => {
     boton.addEventListener('click', comprarProducto);
-  }
+  })
 }
 
 document.querySelectorAll('input[name="mostrar-productos"]').forEach(input => {
@@ -497,8 +492,8 @@ function guardarCambiosProducto() {
 //ACTUALIZAR TODAS LAS TABLAS
 function actualizarTablas() {
   sistema.crearTabla()
-  sistema.crearTablaCompras();
   sistema.crearTablaAdmin();
+  sistema.crearTablaCompras();
   filtrarProductos();
 }
 
@@ -523,11 +518,9 @@ function actualizarEventListeners() {
   })
 
   //Comprar producto
-  let btnsComprarProducto = document.querySelectorAll('.btn-comprar-producto');
-  for (let i = 0; i < btnsComprarProducto.length; i++) {
-    const boton = btnsComprarProducto[i];
+  document.querySelectorAll('.btn-comprar-producto').forEach(boton => {
     boton.addEventListener('click', comprarProducto);
-  }
+  })
 
   //Filtrar por ofertas
   document.querySelectorAll('input[name="mostrar-productos"]').forEach(input => {
@@ -535,11 +528,9 @@ function actualizarEventListeners() {
   });
 
   //Guardar cambios al administrar producto
-  const botonesGuardar = document.querySelectorAll('.btn-guardar-producto');
-  for (let i = 0; i < botonesGuardar.length; i++) {
-    const boton = botonesGuardar[i];
+  document.querySelectorAll('.btn-guardar-producto').forEach(boton => {
     boton.addEventListener('click', guardarCambiosProducto);
-  }
+  })
 
   //Aprobar y cancelar compra (Administrador)
   document.querySelectorAll('.btn-aprobar-compra').forEach(boton => {
