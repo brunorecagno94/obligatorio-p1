@@ -4,6 +4,7 @@ const btnRegistroLogin = document.querySelector('#registrarse');
 const btnRegistro = document.querySelector('#registrar-usuario');
 const btnLogin = document.querySelector("#ingresar-login");
 const btnCrearProducto = document.querySelector('#btn-crear-producto');
+const btnFiltrocompras = document.querySelector('#btn-mostrar-compras');
 //Secciones
 const vistaComprador = document.querySelectorAll('.vista-comprador')
 const vistaAdmin = document.querySelectorAll('.vista-admin')
@@ -25,6 +26,7 @@ for (let i = 0; i < btnsComprarProducto.length; i++) {
   boton.addEventListener('click', comprarProducto);
 }
 
+btnFiltrocompras.addEventListener('click', sistema.crearTablaCompras);
 /*--------------------------------------------------------------*/
 
 //LOGIN DE USUARIO
@@ -38,9 +40,9 @@ function loginUsuario() {
   //Valida los inputs para obtener un objeto usuario con el cual trabajar luego
   for (let i = 0; i < sistema.listaUsuarios.length; i++) {
     const usuario = sistema.listaUsuarios[i];
-    if (usuario.pass === inputPass && usuario.userName === inputUserName
-      && validarCaseInsensitive(sistema.listaUsuarios, 'userName', inputUserName)) {
+    if (usuario.pass === inputPass && usuario.userName.toLowerCase() === inputUserName.toLowerCase()) {
       usuarioLogueado = usuario;
+      console.log(usuario)
       break;
     }
   }
@@ -308,9 +310,9 @@ function filtrarProductos() {
           <input type="button" data-value="${producto.id}" class="btn-comprar-producto" value="Comprar"/>
         </td>
       </tr>`;
-    }
 
-    contenidoTabla += productoTabla;
+      contenidoTabla += productoTabla;
+    }
   }
 
   listadoProductos.innerHTML = contenidoTabla;
@@ -348,23 +350,33 @@ function comprarProducto() {
       let compra = new Compra(producto.nombre, cantidad, producto.precio, producto.id);
       sistema.listaCompras.push(compra);
       producto.stock -= cantidad;
-      actualizarTablaCompras();
       alert('¡Compra agregada!');
-
       if (producto.stock === 0) {
         producto.estado = 'pausado'
-        this.setAttribute('disabled', 'disabled');
-        this.value = 'SIN STOCK'
       }
     } else { alert('No hay stock suficiente') }
   } else {
     alert('Indique una cantidad válida');
   }
+
+  //Reconstruye las tablas
+  sistema.crearTabla();
+  sistema.crearTablaCompras();
+  //Reconstruye los eventos de botones
+  document.querySelectorAll('input[name="mostrar-productos"]').forEach(input => {
+    input.addEventListener('click', filtrarProductos);
+  });
+  document.querySelectorAll('.btn-cancelar-compra').forEach(boton => {
+    boton.addEventListener('click', cancelarCompra);
+  })
+  document.querySelectorAll('.btn-comprar-producto').forEach(boton => {
+    boton.addEventListener('click', comprarProducto);
+  })
 }
 
 //Actualiza la tabla de compras de la vista del Administrador
-function actualizarTablaCompras() {
-  const listadoCompras = document.querySelector('#contenedor-compras-usuario');
+/* function actualizarTablaCompras() {
+  const listadoCompras = document.querySelector('#contenedor-compras');
   let contenidoTabla = '';
 
   for (let i = 0; i < sistema.listaCompras.length; i++) {
@@ -372,7 +384,7 @@ function actualizarTablaCompras() {
     let producto = devolverObjeto(sistema.listaProductos, 'id', compra.id);
 
     //Crea el producto sólo si su estado es activo
-    if (producto.estado === 'activo') {
+    if (producto) {
       let total = producto.precio * compra.cantidadComprada;
       contenidoTabla += `
       <tr>
@@ -390,14 +402,13 @@ function actualizarTablaCompras() {
 
   listadoCompras.innerHTML = contenidoTabla;
 
-  let btnsCancelarCompra = document.querySelectorAll('.btn-cancelar-compra');
-  for (let i = 0; i < btnsCancelarCompra.length; i++) {
-    btnsCancelarCompra[i].addEventListener('click', cancelarCompra);
-  }
-}
+  document.querySelectorAll('.btn-cancelar-compra').forEach(boton => {
+    boton.addEventListener('click', cancelarCompra);
+  })
+} */
 
-// Llamar a actualizarTablaCompras al cargar la página para configurar los eventos correctamente
-actualizarTablaCompras();
+// Llamar a crearTablaCompras al cargar la página para configurar los eventos correctamente
+sistema.crearTablaCompras()
 
 //CANCELAR COMPRA DE PRODUCTO
 function cancelarCompra() {
@@ -410,8 +421,12 @@ function cancelarCompra() {
     }
   }
 
-  actualizarTablaCompras();
+  sistema.crearTablaCompras();
 }
+
+document.querySelectorAll('.btn-cancelar-compra').forEach(boton => {
+  boton.addEventListener('click', cancelarCompra);
+})
 
 //ADMINISTRAR PRODUCTOS
 function guardarCambiosProducto() {
@@ -430,27 +445,21 @@ function guardarCambiosProducto() {
       producto.oferta = nuevaOferta;
 
       alert('Producto actualizado correctamente');
-
-      //Actualizar las tablas de productos y administración
-      sistema.crearTablaAdmin();
-      sistema.crearTabla();
-
-      //Reaplicar el filtro si está seleccionado
-      document.querySelectorAll('input[name="mostrar-productos"]').forEach(input => {
-        input.addEventListener('click', filtrarProductos);
-      });
     }
-    if (nuevoEstado === 'activo' && nuevoStock <= 0) {
-      alert('Debe haber un mínimo de 1 en stock para que el producto esté Activo');
+    if ((nuevoEstado === 'activo' || nuevoEstado === "pausado") && nuevoStock <= 0) {
+      producto.estado = "pausado"
+      alert('Producto actualizado: PAUSADO')
     }
   } else {
     alert('Error al actualizar el producto');
   }
 
-  for (let i = 0; i < btnsComprarProducto.length; i++) {
-    const boton = btnsComprarProducto[i];
-    boton.addEventListener('click', comprarProducto);
-  }
+  //Actualizar las tablas de productos y administrar productos
+  sistema.crearTabla()
+  //Reaplicar el filtro de ofertas
+  document.querySelectorAll('input[name="mostrar-productos"]').forEach(input => {
+    input.addEventListener('click', filtrarProductos);
+  });
 }
 
 
@@ -459,7 +468,7 @@ function actualizarTablas() {
   sistema.crearTabla()
   sistema.crearTablaCompras();
   sistema.crearTablaAdmin();
-  actualizarTablaCompras();
+  sistema.crearTablaCompras();
   filtrarProductos();
 }
 
@@ -493,5 +502,5 @@ function divPrueba() {
   div.innerHTML = result;
 }
 
-document.querySelector('#btn-prueba').addEventListener('click', divPrueba);
+/* document.querySelector('#btn-prueba').addEventListener('click', divPrueba); */
 

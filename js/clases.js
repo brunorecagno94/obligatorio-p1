@@ -31,7 +31,7 @@ class Persona {
 
   //Validación general de tarjeta
   validarTarjeta() {
-    return this.validarFormato() && this.validacionLuhn() && this.validarCVC();
+    return this.validarFormato() && this.validacionLuhn(this.numTarjetaFinal) && this.validarCVC();
   }
 
   /* VALIDARFORMATO Y VALIDAR4DIGITOS vienen juntas*/
@@ -61,31 +61,36 @@ class Persona {
     return !isNaN(this.cvcTarjeta) && this.cvcTarjeta.length === 3;
   }
 
-
-  validacionLuhn() {
-    let alternar = false;
-    let total = 0;
-
-    for (let i = this.numTarjetaFinal.length - 1; i >= 0; i--) {
-      let n = parseInt(this.numTarjetaFinal[i]);
-
-      if (alternar) {
-        n *= 2;
-        if (n > 9) n -= 9;
+  validacionLuhn(pNumero) {
+    let suma = 0;
+    let contador = 0;
+    let i = pNumero.length - 1;
+    let num;
+  
+    while (i >= 0) {
+      num = Number(pNumero.charAt(i));
+      if (isNaN(num)) {
+        return false;
       }
-
-      total += n;
-      alternar = !alternar;
+      if (contador % 2 == 0) {
+        num = this.duplicarPar(num);
+      }
+      suma += num;
+      i--;
+      contador++;
     }
-
-    // El número es válido si el total es divisible por 10
-    if (total % 10 === 0) {
-      alert('valida luhn');
-      return true;
-    } else {
-      alert('no luhn');
-      return false;
+    let total = 9 * suma;
+    let ultimoDigito = total % 10;
+  
+    return ultimoDigito;
+  }
+  
+  duplicarPar(num) {
+    num = num * 2;
+    if (num > 9) {
+      num = 1 + (num % 10);
     }
+    return num;
   }
 }
 
@@ -104,7 +109,7 @@ class Producto {
 
   //Validación general del producto
   validarProducto() {
-    return this.validarNombreProd && this.validarPrecioProd() &&
+    return this.validarNombreProd() && this.validarPrecioProd() &&
       this.validarStockProd() && this.validarDescProd() && this.validarImagenProd();
   }
 

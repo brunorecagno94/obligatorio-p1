@@ -230,9 +230,19 @@ class Sistema {
         nombre: 'Pesas',
         cantidadComprada: 5,
         precio: 12000,
-        estadoCompra: 'pendiente',
+        estadoCompra: 'cancelada',
         usuarioComprador: 'Frangi',
         id: 1,
+        idCompra: ++idCompra,
+      },
+      //BORRAR
+      {
+        nombre: 'Botella',
+        cantidadComprada: 1,
+        precio: 1200,
+        estadoCompra: 'aprobada',
+        usuarioComprador: 'Frangi',
+        id: 2,
         idCompra: ++idCompra,
       },
       {
@@ -263,7 +273,11 @@ class Sistema {
         idCompra: ++idCompra,
       }
     ];
+    //Lista final que imprime el filtro de ofertas
     this.listaFiltroOfertas = [];
+    //Listas que imprime el filtro de compras
+    this.listaComprasAdmin = [];
+    this.listaComprasComprador = [];
     this.usuarioLogueado = null;
   }
 
@@ -309,32 +323,35 @@ class Sistema {
 
     for (let i = 0; i < this.listaProductos.length; i++) {
       const producto = this.listaProductos[i];
-
       //Crea el producto sólo si su estado es activo
       if (producto.estado === 'activo') {
         productoTabla = `
-      <tr data-producto-id="${producto.id}">
-        <td class="nombre-producto">${producto.nombre}</td>
-        <td class="precio-producto">$${producto.precio}</td>
-        <td>${producto.descripcion}</td>
-        <td>${producto.oferta ? 'Sí' : 'No'}</td>
-        <td><img src=${producto.imagen} alt=${producto.descripcion}></td>
-        <td><input type="number" data-cantidad="${producto.id}" class="cantidad-producto-compra"></td>
-        <td>
-          <input type="button" data-value="${producto.id}" class="btn-comprar-producto" 
-          ${producto.estado === 'pausado' ? 'disabled' : ''} value="Comprar"/>
-        </td>
-      </tr>`;
+        <tr data-producto-id="${producto.id}">
+          <td class="nombre-producto">${producto.nombre}</td>
+          <td class="precio-producto">$${producto.precio}</td>
+          <td>${producto.descripcion}</td>
+          <td>${producto.oferta ? 'Sí' : 'No'}</td>
+          <td><img src=${producto.imagen} alt=${producto.descripcion}></td>
+          <td><input type="number" data-cantidad="${producto.id}" class="cantidad-producto-compra"></td>
+          <td>
+            <input type="button" data-value="${producto.id}" class="btn-comprar-producto" 
+            ${producto.estado === 'pausado' ? 'disabled' : ''} value="Comprar"/>
+          </td>
+        </tr>`;
+
+        contenidoTabla += productoTabla;
       }
-      contenidoTabla += productoTabla;
     }
+
     seccionProductos.innerHTML = estructuraTabla;
     const listadoProductos = document.querySelector('#contenedor-productos');
     listadoProductos.innerHTML = contenidoTabla;
   }
 
-  //Crea la tabla de compras del usuario Comprador
+  //Crea la tabla de compras
   crearTablaCompras() {
+    const selectFiltro = document.querySelector('#select-filtro-compras');
+
     //Se crea la estructura de la tabla
     let estructuraTabla = `
     <h3>Compras</h3>
@@ -344,43 +361,97 @@ class Sistema {
               <th>Nombre</th>
               <th>Precio</th>
               <th>Unidades compradas</th>
+              <th>Usuario</th>
               <th>Estado</th>
               <th>Monto total</th>
               <th></th>
             </tr>
           </thead>
-          <tbody id="contenedor-compras-usuario">
+          <tbody id="contenedor-compras">
 
           </tbody>
-          <p id="total-compras-usuario"></p>
         </table>`;
     let productoTabla = ``;
     let contenidoTabla = ``;
+    let usuarioLogueado = null;
 
-    //Lista de compras referentes a un usuario específico
-    const listaComprasUsuario = this.listaCompras.filter(compra => compra.usuarioComprador === this.usuarioLogueado);
-
-    for (let i = 0; i < listaComprasUsuario.length; i++) {
-      const producto = listaComprasUsuario[i];
-      productoTabla = `
-      <tr>
-        <td>${producto.nombre}</td>
-        <td>$${producto.precio}</td>
-        <td>${producto.cantidadComprada}</td>
-        <td>${producto.estadoCompra}</td>
-        <td>$${producto.precio * producto.cantidadComprada}</td>
-        <td>
-          <input type="button" data-value="${producto.id}" class="btn-cancelar-compra" value="Cancelar"/>
-        </td>
-      </tr>`;
-
-      contenidoTabla += productoTabla;
+    //Busca cuál usuario está logueado
+    for (let i = 0; i < sistema.listaUsuarios.length; i++) {
+      const usuario = sistema.listaUsuarios[i];
+      usuarioLogueado = usuario;
+      break;
     }
+
+    //Guarda distintas listas dependiendo del usuario 
+    if (usuarioLogueado.admin) {
+
+      switch (selectFiltro.value) {
+        case 'aprobadas':
+          this.listaComprasAdmin = this.listaCompras;
+          break;
+        case 'pendientes':
+          this.listaComprasAdmin = this.listaCompras.filter(compra => { compra.estadoCompra === 'pendiente' });
+          break;
+        case 'canceladas':
+          this.listaComprasAdmin = this.listaCompras.filter(compra => { compra.estadoCompra === 'cancelada' });
+          break;
+      }
+
+      for (let i = 0; i < this.listaComprasAdmin.length; i++) {
+        const producto = this.listaComprasAdmin[i];
+        productoTabla = `
+        <tr>
+          <td>${producto.nombre}</td>
+          <td>$${producto.precio}</td>
+          <td>${producto.cantidadComprada}</td>
+          <td>${producto.usuarioComprador}</td>
+          <td>${producto.estadoCompra}</td>
+          <td>$${producto.precio * producto.cantidadComprada}</td>
+          <td>
+            <input type="button" data-value="${producto.id}" class="btn-cancelar-compra" 
+            style="${producto.estadoCompra === 'aprobada' || producto.estadoCompra === 'cancelada' ? 'display:none' : ''}" value="Cancelar"/>
+          </td>
+        </tr>`;
+
+        contenidoTabla += productoTabla;
+      }
+    } else {
+      switch (selectFiltro.value) {
+        case 'aprobadas':
+          this.listaComprasComprador = this.listaCompras.filter(compra => { compra.estadoCompra === 'aprobada' });
+          break;
+        case 'pendientes':
+          this.listaComprasComprador = this.listaCompras.filter(compra => { compra.estadoCompra === 'pendiente' });
+          break;
+        case 'canceladas':
+          this.listaComprasComprador = this.listaCompras.filter(compra => { compra.estadoCompra === 'cancelada' });
+          break;
+      }
+
+      for (let i = 0; i < this.listaComprasComprador.length; i++) {
+        const producto = this.listaComprasComprador[i];
+        productoTabla = `
+        <tr>
+          <td>${producto.nombre}</td>
+          <td>$${producto.precio}</td>
+          <td>${producto.cantidadComprada}</td>
+          <td>${producto.usuarioComprador}</td>
+          <td>${producto.estadoCompra}</td>
+          <td>$${producto.precio * producto.cantidadComprada}</td>
+          <td>
+            <input type="button" data-value="${producto.id}" class="btn-cancelar-compra" value="Cancelar"/>
+          </td>
+        </tr>`;
+
+        contenidoTabla += productoTabla;
+      }
+    }
+
     /* Se inserta la estructura de la tabla en el contenedor de HTML, y luego se inserta el listado
     de productos en la estructura de la tabla */
     seccionCompras.innerHTML = estructuraTabla;
-    const listadoCompras = document.querySelector('#contenedor-compras-usuario');
-    listadoCompras.innerHTML = contenidoTabla;
+    const listadoComprasFin = document.querySelector('#contenedor-compras');
+    listadoComprasFin.innerHTML = contenidoTabla;
   }
 
   //Crea la tabla para administrar productos del usuario Administrador
@@ -405,7 +476,8 @@ class Sistema {
 
     for (let i = 0; i < this.listaProductos.length; i++) {
       let producto = this.listaProductos[i];
-      productoTabla = `
+      if (producto.estado === 'activo') {
+        productoTabla = `
       <tr>
         <td>${producto.nombre}</td>
         <td><input type="number" data-id="${producto.id}" class="input-stock" value="${producto.stock}"></td>
@@ -423,7 +495,8 @@ class Sistema {
         </td>
       </tr>`;
 
-      contenidoTabla += productoTabla;
+        contenidoTabla += productoTabla;
+      }
     }
 
     seccionAdministrarProductos.innerHTML = estructuraTabla;
