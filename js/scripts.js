@@ -4,7 +4,6 @@ const btnRegistroLogin = document.querySelector('#registrarse');
 const btnRegistro = document.querySelector('#registrar-usuario');
 const btnLogin = document.querySelector("#ingresar-login");
 const btnCrearProducto = document.querySelector('#btn-crear-producto');
-const btnFiltrocompras = document.querySelector('#btn-mostrar-compras');
 //Secciones
 const vistaComprador = document.querySelectorAll('.vista-comprador')
 const vistaAdmin = document.querySelectorAll('.vista-admin')
@@ -19,25 +18,11 @@ const seccionProductos = document.querySelector('#contenedor-listado-productos')
 const seccionAdministrarProductos = document.querySelector('#contenedor-administrar-productos');
 
 //CARGA DE LISTADOS PRECARGADOS Y CREACIÓN DE EVENTOS DE BOTONES
-actualizarTablas();
-actualizarEventListeners()
+sistema.crearTabla();
+sistema.crearTablaAdmin();
+filtrarProductos();
+actualizarEventListeners();
 
-//Funcionamiento de los botones de Comprar
-/* let btnsComprarProducto = document.querySelectorAll('.btn-comprar-producto');
-for (let i = 0; i < btnsComprarProducto.length; i++) {
-  const boton = btnsComprarProducto[i];
-  boton.addEventListener('click', comprarProducto);
-}
-
-document.querySelectorAll('.btn-cancelar-compra').forEach(boton => {
-  boton.addEventListener('click', cancelarCompra);
-})
-
-document.querySelectorAll('.btn-aprobar-compra').forEach(boton => {
-  boton.addEventListener('click', aprobarCompra);
-})
- */
-btnFiltrocompras.addEventListener('click', sistema.crearTablaCompras);
 /*--------------------------------------------------------------*/
 
 //LOGIN DE USUARIO
@@ -45,50 +30,58 @@ btnFiltrocompras.addEventListener('click', sistema.crearTablaCompras);
 function loginUsuario() {
   const inputUserName = document.querySelector("#username-login").value.trim();
   const inputPass = document.querySelector("#pass-login").value.trim();
-  let usuarioLogueado = null;
   const errorLogin = document.querySelector('#login-alert');
 
-  //Valida los inputs para obtener un objeto usuario con el cual trabajar luego
+  // Valida los inputs para obtener un objeto usuario con el cual trabajar luego
   for (let i = 0; i < sistema.listaUsuarios.length; i++) {
     const usuario = sistema.listaUsuarios[i];
     if (usuario.pass === inputPass && usuario.userName.toLowerCase() === inputUserName.toLowerCase()) {
-      usuarioLogueado = usuario;
+      sistema.usuarioLogueado = usuario;
       break;
     }
   }
 
-  //Valida si el usuario es correcto
-  if (usuarioLogueado) {
+  // Valida si el usuario es correcto
+  if (sistema.usuarioLogueado) {
     alert('Login exitoso!');
     errorLogin.style.display = 'none';
-    sistema.usuarioLogueado = usuarioLogueado.userName;
     seccionLogin.style.display = 'none';
     seccionRegistro.style.display = 'none';
-    actualizarNav()
-
+    actualizarNav();
+    actualizarTablas();
+    //Actualiza el filtro de la tabla de compras para que aparezcan las compras
+    document.querySelectorAll('input[name="mostrar-compras"]').forEach(input => {
+      input.addEventListener('click', sistema.crearTablaCompras);
+    });
     //Cambia la vista si el usuario es Administrador o Comprador
-    if (usuarioLogueado.admin) {
-      mostrarVistaAdmin()
+    if (sistema.usuarioLogueado.admin) {
+      mostrarVistaAdmin();
+      mostrarMontoAdministrador()
     } else {
-      mostrarVistaComprador()
+      mostrarVistaComprador();
+      mostrarMontoUsuario()
     }
-    sistema.crearTablaCompras()
   } else {
     errorLogin.style.display = 'block';
   }
 
-  actualizarTablas();
-
-  //Habilita el eventListener del filtro de ofertas en el listado de productos
+  //Actualiza eventos de botones
   document.querySelectorAll('input[name="mostrar-productos"]').forEach(input => {
     input.addEventListener('click', filtrarProductos);
   });
-}
 
+  document.querySelectorAll('.btn-aprobar-compra').forEach(boton => {
+    boton.addEventListener('click', aprobarCompra);
+  });
+
+  document.querySelectorAll('.btn-cancelar-compra').forEach(boton => {
+    boton.addEventListener('click', cancelarCompra);
+  });
+}
 
 //Actualiza el nav superior cuando se loguea un usuario
 function actualizarNav() {
-  const nombreUsuario = sistema.usuarioLogueado;
+  const nombreUsuario = sistema.usuarioLogueado.userName;
   const contenidoNav = `
     <li><p id="nav-nombre">${nombreUsuario}</p></li>
     <li><a id="cerrar-sesion">Cerrar sesión</a></li>
@@ -107,14 +100,7 @@ function cerrarSesion() {
   seccionLogin.style.display = 'block';
   this.style.display = 'none';
 
-  //Esconde todo el contenido de la página al cerrar sesión
-  vistaComprador.forEach(contenedor => {
-    contenedor.style.display = 'none';
-  })
-  vistaAdmin.forEach(contenedor => {
-    contenedor.style.display = 'none';
-  })
-  seccionCompras.style.display = 'none';
+  esconderVistas();
 }
 
 //Muestra el contenido del usuario Administrador
@@ -137,9 +123,17 @@ function mostrarVistaComprador() {
   })
 }
 
+//Esconde todo el contenido de la página al cerrar sesión
+function esconderVistas() {
+  vistaComprador.forEach(contenedor => {
+    contenedor.style.display = 'none';
+  });
+  vistaAdmin.forEach(contenedor => {
+    contenedor.style.display = 'none';
+  });
+}
+
 //REGISTRO DE USUARIO
-
-
 //Función que se ejecuta al clickear el botón de "Registrarse"
 function registrarUsuario() {
   const nombre = document.querySelector('#nombre-registro').value;
@@ -323,7 +317,6 @@ document.querySelectorAll('input[name="mostrar-productos"]').forEach(input => {
   input.addEventListener('click', filtrarProductos);
 });
 
-
 //COMPRA DE PRODUCTOS
 function comprarProducto() {
   const inputsCantidad = document.querySelectorAll('.cantidad-producto-compra');
@@ -342,14 +335,11 @@ function comprarProducto() {
   let producto = devolverObjeto(sistema.listaProductos, 'id', dataValueBoton);
 
   if (producto && cantidad > 0) {
-    if (cantidad <= producto.stock) {
+    if (cantidad <= producto.stockProvisorio) {
       let compra = new Compra(producto.nombre, cantidad, producto.precio, producto.id);
       sistema.listaCompras.push(compra);
-      producto.stock -= cantidad;
+      producto.stockProvisorio -= cantidad;
       alert('¡Compra agregada!');
-      if (producto.stock === 0) {
-        producto.estado = 'pausado'
-      }
     } else { alert('No hay stock suficiente') }
   } else {
     alert('Indique una cantidad válida');
@@ -362,6 +352,7 @@ function comprarProducto() {
   document.querySelectorAll('input[name="mostrar-productos"]').forEach(input => {
     input.addEventListener('click', filtrarProductos);
   });
+  
   document.querySelectorAll('.btn-cancelar-compra').forEach(boton => {
     boton.addEventListener('click', cancelarCompra);
   })
@@ -372,51 +363,15 @@ function comprarProducto() {
 
   document.querySelectorAll('.btn-comprar-producto').forEach(boton => {
     boton.addEventListener('click', comprarProducto);
-  })
+  });
 }
-
-//Actualiza la tabla de compras de la vista del Administrador
-/* function actualizarTablaCompras() {
-  const listadoCompras = document.querySelector('#contenedor-compras');
-  let contenidoTabla = '';
-
-  for (let i = 0; i < sistema.listaCompras.length; i++) {
-    let compra = sistema.listaCompras[i];
-    let producto = devolverObjeto(sistema.listaProductos, 'id', compra.id);
-
-    //Crea el producto sólo si su estado es activo
-    if (producto) {
-      let total = producto.precio * compra.cantidadComprada;
-      contenidoTabla += `
-      <tr>
-        <td>${compra.nombre}</td>
-        <td>$${producto.precio}</td>
-        <td>${compra.cantidadComprada}</td>
-        <td>${compra.estadoCompra}</td>
-        <td>$${total}</td>
-        <td>
-          <input type="button" data-value="${compra.idCompra}" class="btn-cancelar-compra" value="Cancelar" ${compra.estadoCompra === 'cancelada' || compra.estadoCompra === 'aprobada' ? 'disabled' : ''} />
-        </td>
-      </tr>`;
-    }
-  }
-
-  listadoCompras.innerHTML = contenidoTabla;
-
-  document.querySelectorAll('.btn-cancelar-compra').forEach(boton => {
-    boton.addEventListener('click', cancelarCompra);
-  })
-} */
-
-// Llamar a crearTablaCompras al cargar la página para configurar los eventos correctamente
-sistema.crearTablaCompras()
 
 //CANCELAR COMPRA DE PRODUCTO
 function cancelarCompra() {
   const compraId = parseInt(this.getAttribute('data-value'));
 
   for (let i = 0; i < sistema.listaCompras.length; i++) {
-    if (sistema.listaCompras[i].idCompra === compraId && sistema.listaCompras[i].estadoCompra === 'pendiente') {
+    if (sistema.listaCompras[i].id === compraId && sistema.listaCompras[i].estadoCompra === 'pendiente') {
       sistema.listaCompras[i].estadoCompra = 'cancelada';
       break;
     }
@@ -424,31 +379,77 @@ function cancelarCompra() {
 
   sistema.crearTabla();
   sistema.crearTablaCompras();
-}
 
-document.querySelectorAll('.btn-cancelar-compra').forEach(boton => {
-  boton.addEventListener('click', cancelarCompra);
-})
+
+  //Actualiza eventos de botones
+  document.querySelectorAll('input[name="mostrar-productos"]').forEach(input => {
+    input.addEventListener('click', filtrarProductos);
+  });
+  document.querySelectorAll('.btn-aprobar-compra').forEach(boton => {
+    boton.addEventListener('click', aprobarCompra);
+  });
+
+  document.querySelectorAll('.btn-cancelar-compra').forEach(boton => {
+    boton.addEventListener('click', cancelarCompra);
+  });
+
+  document.querySelectorAll('.btn-comprar-producto').forEach(boton => {
+    boton.addEventListener('click', comprarProducto);
+  });
+}
 
 //APRUEBA COMPRA DE PRODUCTO
 function aprobarCompra() {
   const compraId = parseInt(this.getAttribute('data-value'));
 
   for (let i = 0; i < sistema.listaCompras.length; i++) {
-    if (sistema.listaCompras[i].idCompra === compraId && sistema.listaCompras[i].estadoCompra === 'pendiente') {
-      sistema.listaCompras[i].estadoCompra = 'aprobada';
+    const compra = sistema.listaCompras[i];
+    const productoRelacionado = devolverObjeto(sistema.listaProductos, 'id', compra.id);
+    const usuarioRelacionado = devolverObjeto(sistema.listaUsuarios, 'userName', compra.usuarioComprador);
+
+    if (compra.id === compraId && compra.estadoCompra === 'pendiente') {
+      if ((usuarioRelacionado.saldo < compra.cantidadComprada * compra.precio) ||
+        productoRelacionado.stock < compra.cantidadComprada ||
+        productoRelacionado.estado !== 'activo') {
+        alert('No se pudo realizar la compra. Su estado pasó a CANCELADA.')
+        compra.estadoCompra = 'cancelada';
+      } else if (usuarioRelacionado.saldo >= compra.cantidadComprada * compra.precio) {
+        compra.estadoCompra = 'aprobada';
+        usuarioRelacionado.saldo -= compra.cantidadComprada * compra.precio;
+        productoRelacionado.unidadesVendidas += compra.cantidadComprada;
+
+        if (productoRelacionado.stock === compra.cantidadComprada) {
+          productoRelacionado.estado = 'pausado';
+        }
+      }
       break;
     }
   }
 
   sistema.crearTabla();
   sistema.crearTablaCompras();
+
+  //Actualiza el monto y el saldo del usuario
+  mostrarMontoUsuario()
+  mostrarMontoAdministrador()
+
+  //Actualiza los eventos de los botones
+  document.querySelectorAll('.btn-aprobar-compra').forEach(boton => {
+    boton.addEventListener('click', aprobarCompra);
+  });
+
+  document.querySelectorAll('.btn-cancelar-compra').forEach(boton => {
+    boton.addEventListener('click', cancelarCompra);
+  });
+
+  document.querySelectorAll('.btn-comprar-producto').forEach(boton => {
+    boton.addEventListener('click', comprarProducto);
+  });
+
+  document.querySelectorAll('input[name="mostrar-compras"]').forEach(input => {
+    input.addEventListener('click', sistema.crearTablaCompras);
+  });
 }
-
-document.querySelectorAll('.btn-aprobar-compra').forEach(boton => {
-  boton.addEventListener('click', aprobarCompra);
-})
-
 
 //ADMINISTRAR PRODUCTOS
 function guardarCambiosProducto() {
@@ -489,6 +490,43 @@ function guardarCambiosProducto() {
 }
 
 
+//Muestra monto y saldo del Comprador
+function mostrarMontoUsuario() {
+  const parrafo = document.querySelector('#monto-compras-usuario');
+  let montoTotal = 0;
+  let mensaje = ``
+
+  for (let i = 0; i < sistema.listaCompras.length; i++) {
+    const compra = sistema.listaCompras[i];
+    if (compra.usuarioComprador === sistema.usuarioLogueado.userName && compra.estadoCompra === 'aprobada') {
+      montoTotal += compra.precio * compra.cantidadComprada;
+    }
+    mensaje = `Total de compras: $${montoTotal}; su saldo disponible es: $${sistema.usuarioLogueado.saldo}.`
+  }
+
+  parrafo.innerHTML = mensaje;
+}
+
+//Mostrar precio de aprobadas y ganancia total para el Administrador
+function mostrarMontoAdministrador() {
+  const parrafo = document.querySelector('#monto-compras-admin');
+  let mensaje = ``;
+  let contadorGanancias = 0;
+
+  for (let i = 0; i < sistema.listaProductos.length; i++) {
+    const producto = sistema.listaProductos[i];
+
+    mensaje += `<p>${producto.nombre}: ${producto.unidadesVendidas} unidades</p>`
+  }
+  for (let i = 0; i < sistema.listaCompras.length; i++) {
+    const compra = sistema.listaCompras[i];
+    if (compra.estadoCompra === 'aprobada') contadorGanancias += compra.cantidadComprada * compra.precio;
+  }
+
+  mensaje += `<strong>Ganancias totales: $${contadorGanancias}</strong>`
+  parrafo.innerHTML = mensaje;
+}
+
 
 //ACTUALIZAR TODAS LAS TABLAS
 function actualizarTablas() {
@@ -511,34 +549,39 @@ function actualizarEventListeners() {
   //Registrar usuario
   btnRegistro.addEventListener('click', () => {
     registrarUsuario(sistema.listaUsuarios);
-  })
+  });
 
   //Crear producto
   btnCrearProducto.addEventListener('click', () => {
     crearProducto(sistema.listaProductos);
-  })
+  });
 
   //Comprar producto
   document.querySelectorAll('.btn-comprar-producto').forEach(boton => {
     boton.addEventListener('click', comprarProducto);
-  })
+  });
 
   //Filtrar por ofertas
   document.querySelectorAll('input[name="mostrar-productos"]').forEach(input => {
     input.addEventListener('click', filtrarProductos);
   });
 
+  //Filtrar lista de compras de Comprador según usuario
+  document.querySelectorAll('input[name="mostrar-compras"]').forEach(input => {
+    input.addEventListener('click', sistema.crearTablaCompras);
+  });
+
   //Guardar cambios al administrar producto
   document.querySelectorAll('.btn-guardar-producto').forEach(boton => {
     boton.addEventListener('click', guardarCambiosProducto);
-  })
+  });
 
   //Aprobar y cancelar compra (Administrador)
   document.querySelectorAll('.btn-aprobar-compra').forEach(boton => {
     boton.addEventListener('click', aprobarCompra);
-  })
+  });
 
   document.querySelectorAll('.btn-cancelar-compra').forEach(boton => {
     boton.addEventListener('click', cancelarCompra);
-  })
+  });
 }

@@ -231,12 +231,14 @@ footer a {
   }
 }
 
-#login-alert, #registro-alert {
+#login-alert,
+#registro-alert {
   display: none;
   color: red;
 }
 
-.vista-admin, .vista-comprador {
+.vista-admin,
+.vista-comprador {
   display: none;
 }
 
@@ -245,8 +247,22 @@ footer a {
   text-decoration: none;
   color: rgb(47, 95, 167);
   font-weight: 700;
-  
+
   &:hover {
     color: rgb(133, 158, 196);
+  }
+}
+
+#filtro-compra-radio {
+  display: flex;
+
+  .input-group {
+    display: flex;
+    justify-content: start;
+    width: fit-content;
+
+    input {
+      margin-left: -80px;
+    }
   }
 }

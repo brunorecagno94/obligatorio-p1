@@ -2,8 +2,6 @@
 let idUsuario = 9;
 // Se inicializa en 9 porque ya hay productos creados del 0 al 9
 let idProducto = 9;
-// Se inicializa en 4 porque ya hay compras creadas del 0 al 4
-let idCompra = 4;
 
 
 class Sistema {
@@ -120,6 +118,8 @@ class Sistema {
         descripcion: "Pelota oficial",
         imagen: './img/pelota.jpg',
         stock: 12,
+        stockProvisorio: 12,
+        unidadesVendidas: 2,
         idInicial: 'PROD_ID_0',
         id: 0,
         oferta: false,
@@ -131,6 +131,8 @@ class Sistema {
         descripcion: "Pesas para ejercicios",
         imagen: './img/pesa.jpg',
         stock: 3,
+        stockProvisorio: 3,
+        unidadesVendidas: 5,
         idInicial: 'PROD_ID_1',
         id: 1,
         oferta: false,
@@ -142,6 +144,8 @@ class Sistema {
         descripcion: "Cantimplora para guardar líquido",
         imagen: './img/botella.jpg',
         stock: 1,
+        stockProvisorio: 0,
+        unidadesVendidas: 1,
         idInicial: 'PROD_ID_2',
         id: 2,
         oferta: false,
@@ -153,6 +157,8 @@ class Sistema {
         descripcion: "Gorra para protección en piscina",
         imagen: './img/gorra.jpg',
         stock: 50,
+        stockProvisorio: 50,
+        unidadesVendidas: 8,
         idInicial: 'PROD_ID_3',
         id: 3,
         oferta: false,
@@ -164,6 +170,8 @@ class Sistema {
         descripcion: "Conos para ejercicios",
         imagen: './img/conos.jpg',
         stock: 34,
+        stockProvisorio: 34,
+        unidadesVendidas: 15,
         idInicial: 'PROD_ID_4',
         id: 4,
         oferta: false,
@@ -175,6 +183,8 @@ class Sistema {
         descripcion: "Patas de rana para nadar",
         imagen: './img/patas.jpg',
         stock: 14,
+        stockProvisorio: 14,
+        unidadesVendidas: 2,
         idInicial: 'PROD_ID_5',
         id: 5,
         oferta: false,
@@ -186,6 +196,8 @@ class Sistema {
         descripcion: "Protección para piernas",
         imagen: './img/proteccion.jpg',
         stock: 4,
+        stockProvisorio: 4,
+        unidadesVendidas: 3,
         idInicial: 'PROD_ID_6',
         id: 6,
         oferta: true,
@@ -197,6 +209,8 @@ class Sistema {
         descripcion: "Camiseta oficial",
         imagen: './img/camiseta.png',
         stock: 24,
+        stockProvisorio: 24,
+        unidadesVendidas: 10,
         idInicial: 'PROD_ID_7',
         id: 7,
         oferta: true,
@@ -207,7 +221,9 @@ class Sistema {
         precio: 700,
         descripcion: "Zapatillas oficiales",
         imagen: './img/zapatillas.jpeg',
-        stock: 104,
+        stock: 4,
+        stockProvisorio: 4,
+        unidadesVendidas: 2,
         idInicial: 'PROD_ID_8',
         id: 8,
         oferta: true,
@@ -219,6 +235,8 @@ class Sistema {
         descripcion: "Lentes para protección en piscina",
         imagen: './img/lentes.jpg',
         stock: 16,
+        stockProvisorio: 16,
+        unidadesVendidas: 6,
         idInicial: 'PROD_ID_9',
         id: 9,
         oferta: true,
@@ -232,29 +250,15 @@ class Sistema {
         precio: 6000,
         estadoCompra: 'pendiente',
         usuarioComprador: 'AliP',
-        idInicial: 'PROD_ID_',
         id: 0,
-        idCompra: ++idCompra,
-
       },
       {
         nombre: 'Pesas',
         cantidadComprada: 5,
         precio: 12000,
-        estadoCompra: 'cancelada',
-        usuarioComprador: 'Frangi',
-        id: 1,
-        idCompra: ++idCompra,
-      },
-      //BORRAR
-      {
-        nombre: 'Botella',
-        cantidadComprada: 1,
-        precio: 1200,
         estadoCompra: 'aprobada',
         usuarioComprador: 'Frangi',
-        id: 2,
-        idCompra: ++idCompra,
+        id: 1,
       },
       {
         nombre: 'Botella',
@@ -263,25 +267,30 @@ class Sistema {
         estadoCompra: 'pendiente',
         usuarioComprador: 'Frangi',
         id: 2,
-        idCompra: ++idCompra,
+      },
+      {
+        nombre: 'Botella',
+        cantidadComprada: 1,
+        precio: 1200,
+        estadoCompra: 'cancelada',
+        usuarioComprador: 'Frangi',
+        id: 2,
       },
       {
         nombre: 'Gorra de natación',
         cantidadComprada: 1,
         precio: 150,
-        estadoCompra: 'pendiente',
+        estadoCompra: 'aprobada',
         usuarioComprador: 'Matimati',
         id: 3,
-        idCompra: ++idCompra,
       },
       {
         nombre: 'Conos',
         cantidadComprada: 2,
         precio: 700,
-        estadoCompra: 'pendiente',
+        estadoCompra: 'aprobada',
         usuarioComprador: 'Matimati',
         id: 4,
-        idCompra: ++idCompra,
       }
     ];
     //Lista final que imprime el filtro de ofertas
@@ -337,7 +346,7 @@ class Sistema {
       //Crea el producto sólo si su estado es activo
       if (producto.estado === 'activo') {
         productoTabla = `
-        <tr data-producto-id="${producto.id}">
+        <tr data-producto-id="${producto.id}" style="${producto.stockProvisorio <= 0 ? 'display:none' : ''}">
           <td class="nombre-producto">${producto.nombre}</td>
           <td class="precio-producto">$${producto.precio}</td>
           <td>${producto.descripcion}</td>
@@ -361,7 +370,7 @@ class Sistema {
 
   //Crea la tabla de compras
   crearTablaCompras() {
-    const selectFiltro = document.querySelector('#select-filtro-compras')
+    const radioFiltro = document.querySelector('input[name="mostrar-compras"]:checked');
     //Se crea la estructura de la tabla
     let estructuraTabla = `
         <table>
@@ -379,82 +388,88 @@ class Sistema {
           <tbody id="contenedor-compras-interno">
           </tbody>
         </table>`;
-    let productoTabla = ``;
+    let compraTabla = ``;
     let contenidoTabla = ``;
-    let usuarioLogueado = null;
 
-    //Busca cuál usuario está logueado
-    for (let i = 0; i < sistema.listaUsuarios.length; i++) {
-      const usuario = sistema.listaUsuarios[i];
-      if(usuario.userName === this.usuarioLogueado);
-      usuarioLogueado = usuario;
-      console.log(usuario.userName, this.usuarioLogueado)
-      break;
+    if (sistema.usuarioLogueado) {
+      if (sistema.usuarioLogueado.admin) {
+        this.listaComprasAdmin = sistema.listaCompras;
+
+        for (let i = 0; i < this.listaComprasAdmin.length; i++) {
+          const compra = this.listaComprasAdmin[i];
+          compraTabla = `
+          <tr>
+            <td>${compra.nombre}</td>
+            <td>$${compra.precio}</td>
+            <td>${compra.cantidadComprada}</td>
+            <td>${compra.usuarioComprador}</td>
+            <td>${compra.estadoCompra}</td>
+            <td>$${compra.precio * compra.cantidadComprada}</td>
+            <td>
+              <input type="button" data-value="${compra.id}" 
+              style="${compra.estadoCompra === 'aprobada' || compra.estadoCompra === 'cancelada' ? 'display:none' : ''}" class="btn-aprobar-compra" value="Aprobar"/>
+            </td>
+          </tr>`;
+
+          contenidoTabla += compraTabla;
+        }
+        seccionComprasAdmin.innerHTML = estructuraTabla;
+        const listaContenedor = document.querySelector('#contenedor-compras-interno');
+        listaContenedor.innerHTML = contenidoTabla;
+
+      } else {
+        switch (radioFiltro.value) {
+          case 'todas':
+            this.listaComprasComprador = sistema.listaCompras;
+            break;
+          case 'aprobadas':
+            this.listaComprasComprador = sistema.listaCompras.filter(compra => compra.estadoCompra === 'aprobada');
+            break;
+          case 'pendientes':
+            this.listaComprasComprador = sistema.listaCompras.filter(compra => compra.estadoCompra === 'pendiente');
+            break;
+          case 'canceladas':
+            this.listaComprasComprador = sistema.listaCompras.filter(compra => compra.estadoCompra === 'cancelada');
+            break;
+        }
+
+        for (let i = 0; i < this.listaComprasComprador.length; i++) {
+          const compra = this.listaComprasComprador[i];
+
+          //Valida que la compra corresponda al usuario logueado
+          if (compra.usuarioComprador === sistema.usuarioLogueado.userName) {
+            compraTabla = `
+            <tr>
+              <td>${compra.nombre}</td>
+              <td>$${compra.precio}</td>
+              <td>${compra.cantidadComprada}</td>
+              <td>${compra.usuarioComprador}</td>
+              <td>${compra.estadoCompra}</td>
+              <td>$${compra.precio * compra.cantidadComprada}</td>
+              <td>
+                <input type="button" data-value="${compra.id}" class="btn-cancelar-compra"
+                style="${compra.estadoCompra === 'aprobada' || compra.estadoCompra === 'cancelada' ? 'display:none' : ''}" value="Cancelar"/>
+              </td>
+            </tr>`;
+
+            contenidoTabla += compraTabla;
+          }
+        }
+        seccionCompras.innerHTML = estructuraTabla;
+        const listaContenedor = document.querySelector('#contenedor-compras-interno');
+        listaContenedor.innerHTML = contenidoTabla;
+        mostrarMontoUsuario();
+      }
     }
 
-    //Guarda distintas listas dependiendo del usuario 
-    if (usuarioLogueado.admin) {
-      this.listaComprasAdmin = sistema.listaCompras;
-
-      for (let i = 0; i < this.listaComprasAdmin.length; i++) {
-        const producto = this.listaComprasAdmin[i];
-        productoTabla = `
-        <tr>
-          <td>${producto.nombre}</td>
-          <td>$${producto.precio}</td>
-          <td>${producto.cantidadComprada}</td>
-          <td>${producto.usuarioComprador}</td>
-          <td>${producto.estadoCompra}</td>
-          <td>$${producto.precio * producto.cantidadComprada}</td>
-          <td>
-            <input type="button" data-value="${producto.id}" class="btn-aprobar-compra" value="Aprobar"/>
-          </td>
-        </tr>`;
-
-        contenidoTabla += productoTabla;
-      }
-      seccionComprasAdmin.innerHTML = estructuraTabla;
-      const listaContenedor = document.querySelector('#contenedor-compras-interno');
-      listaContenedor.innerHTML = contenidoTabla;
-
-    } else {
-
-      switch (selectFiltro.value) {
-        case 'todas':
-          this.listaComprasComprador = sistema.listaCompras;
-          break;
-        case 'aprobadas':
-          this.listaComprasComprador = sistema.listaCompras.filter(compra => compra.estadoCompra === 'aprobada');
-          break;
-        case 'pendientes':
-          this.listaComprasComprador = sistema.listaCompras.filter(compra => compra.estadoCompra === 'pendiente');
-          break;
-        case 'canceladas':
-          this.listaComprasComprador = sistema.listaCompras.filter(compra => compra.estadoCompra === 'cancelada');
-          break;
-      }
-
-      for (let i = 0; i < this.listaComprasComprador.length; i++) {
-        const producto = this.listaComprasComprador[i];
-        productoTabla = `
-        <tr>
-          <td>${producto.nombre}</td>
-          <td>$${producto.precio}</td>
-          <td>${producto.cantidadComprada}</td>
-          <td>${producto.usuarioComprador}</td>
-          <td>${producto.estadoCompra}</td>
-          <td>$${producto.precio * producto.cantidadComprada}</td>
-          <td>
-            <input type="button" data-value="${producto.id}" class="btn-cancelar-compra" value="Cancelar"/>
-          </td>
-        </tr>`;
-
-        contenidoTabla += productoTabla;
-      }
-      
-    }
-
-
+    //Crea los eventos para cancelar y aprobar compras
+    document.querySelectorAll('.btn-aprobar-compra').forEach(boton => {
+      boton.addEventListener('click', aprobarCompra);
+    });
+  
+    document.querySelectorAll('.btn-cancelar-compra').forEach(boton => {
+      boton.addEventListener('click', cancelarCompra);
+    });
   }
 
 
@@ -514,16 +529,4 @@ class Sistema {
       boton.addEventListener('click', guardarCambiosProducto);
     }
   }
-
-  /* document.querySelector('#boton').addEventListener('click', e => {
-    e.preventDefault();
-    if(!sistema.usuarioLogueado) {
-      
-    sistema.usuarioLogueado = true;
-      seccionRegistro.style.display = 'none';
-    } else {
-      seccionRegistro.style.display = 'block';
-    }
-  
-  }) */
 }

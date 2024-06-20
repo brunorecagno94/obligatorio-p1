@@ -74,6 +74,7 @@ function buscarAtributo(array, atributo, valor) {
 }
 
 function devolverObjeto(array, atributo, valor) {
+  let objeto = null;
   for (let i = 0; i < array.length; i++) {
     if (array[i][`${atributo}`] === valor) {
       objeto = array[i];
@@ -81,7 +82,7 @@ function devolverObjeto(array, atributo, valor) {
     }
   }
   return objeto;
-} 
+}
 
 function sumarStock(array, atributo, valor, nuevoStock) {
 

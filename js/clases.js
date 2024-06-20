@@ -96,12 +96,15 @@ class Persona {
 
 //Constructor para nuevo producto
 class Producto {
-  constructor(nombreProd, precioProd, descripcionProd, urlImagen, stockProd) {
+  constructor(nombreProd, precioProd, descripcionProd, urlImagen, stockProd, unidadesVendidas) {
     this.nombre = nombreProd.trim();
     this.precio = precioProd.trim();
     this.descripcion = descripcionProd.trim();
     this.imagen = urlImagen;
     this.stock = stockProd;
+    //StockProvisorio es para que desaparezca el producto en el momento de la compra sin restar stock para evaluar cuando se aprueba
+    this.stockProvisorio = stockProd;
+    this.unidadesVendidas = unidadesVendidas;
     this.idInicial = `PROD_ID_${++idProducto}`
     this.id = extraerNumero(this.idInicial);
     this.oferta = false;
@@ -142,12 +145,9 @@ class Compra {
     this.cantidadComprada = cantidad;
     this.precio = precioProd;
     this.estadoCompra = 'pendiente';
-    /* "id" existe para conectar el producto con la compra a la hora de cargarla en la tabla de compras, mientras que
-    "idCompra" existe para identificar cada compra a la hora de cancelar, y evitar que se cancelen tres compras distintas
-    de un mismo producto */
+    /* "id" existe para conectar el producto con la compra a la hora de cargarla en la tabla de compras */
     this.id = idProd;
-    this.idCompra = ++idCompra;
-    this.usuarioComprador = sistema.usuarioLogueado;
+    this.usuarioComprador = sistema.usuarioLogueado.userName;
   }
   
   validarCantidadVacia() {

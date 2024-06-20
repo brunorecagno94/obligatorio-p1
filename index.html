@@ -75,7 +75,11 @@
 
       <!-- VISTA ADMINISTRADOR -->
       <hr>
-
+      <div class="vista-admin">
+        <h4>Unidades vendidas</h4>
+        <p id="monto-compras-admin"></p>
+      </div>
+      <br><br>
       <!-- CREAR PRODUCTO -->
       <section id="contenedor-crear-producto" class="vista-admin">
         <h3>Crear producto</h3>
@@ -132,16 +136,30 @@
       <!-- LISTADO DE COMPRAS COMPRADOR-->
       <section class="vista-comprador">
         <h3>Compras</h3>
-        <select name="" id="select-filtro-compras">
-          <option value="todas">Todas</option>
-          <option value="aprobadas">Aprobadas</option>
-          <option value="pendientes">Pendientes</option>
-          <option value="canceladas">Canceladas</option>
-        </select>
-        <button id="btn-mostrar-compras">Mostrar</button>
-        <section id="contenedor-compras"></section>
-        <hr />
+        <div id="filtro-compra-radio">
+          <div class="input-group">
+            <label for="todas">Todas</label>
+            <input type="radio" name="mostrar-compras" id="todas" value="todas" checked>
+          </div>
+          <div class="input-group">
+            <label for="aprobadas">Aprobadas</label>
+            <input type="radio" name="mostrar-compras" id="aprobadas" value="aprobadas">
+          </div>
+          <div class="input-group">
+            <label for="pendientes">Pendientes</label>
+            <input type="radio" name="mostrar-compras" id="pendientes" value="pendientes">
+          </div>
+          <div class="input-group">
+            <label for="canceladas">Canceladas</label>
+            <input type="radio" name="mostrar-compras" id="canceladas" value="canceladas">
+          </div>
+        </div>
+
       </section>
+
+      <section id="contenedor-compras" class="vista-comprador"></section>
+      <p id="monto-compras-usuario" class=" vista-comprador"></p>
+      <hr />
     </main>
     <!-- FIN CONTENIDO -->
     <footer>
