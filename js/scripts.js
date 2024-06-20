@@ -389,10 +389,6 @@ function cancelarCompra() {
     boton.addEventListener('click', aprobarCompra);
   });
 
-  document.querySelectorAll('.btn-cancelar-compra').forEach(boton => {
-    boton.addEventListener('click', cancelarCompra);
-  });
-
   document.querySelectorAll('.btn-comprar-producto').forEach(boton => {
     boton.addEventListener('click', comprarProducto);
   });

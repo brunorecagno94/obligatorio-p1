@@ -470,6 +470,10 @@ class Sistema {
     document.querySelectorAll('.btn-cancelar-compra').forEach(boton => {
       boton.addEventListener('click', cancelarCompra);
     });
+
+    document.querySelectorAll('input[name="mostrar-compras"]').forEach(input => {
+      input.addEventListener('click', this.crearTablaCompras);
+    });
   }
 
 
